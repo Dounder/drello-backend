@@ -44,9 +44,11 @@ http://localhost:<port>/api/v1/seed
 
 8. Renew **`"JWT"`** on each login after execute step **`"7"`**
 
+```bash
+Default user when running the seed, you can change this in src/seed/data/users.ts
+```
+
 ```json
-// Default user when running the seed
-// You can change this in src/seed/data/users.ts
 {
   "username": "admin",
   "password": "Aa1234!"
