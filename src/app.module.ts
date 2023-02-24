@@ -6,11 +6,13 @@ import { JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { join } from 'path';
+
 import { AuthModule } from './auth/auth.module';
+import { ClientsModule } from './clients/clients.module';
 import { ENV_CONFIG } from './config/app.config';
 import { JoiValidationSchema } from './config/joi.config';
-import { UsersModule } from './users/users.module';
 import { SeedModule } from './seed/seed.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -51,15 +53,17 @@ import { SeedModule } from './seed/seed.module';
         autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
         plugins: [ApolloServerPluginLandingPageLocalDefault],
         context: ({ req }) => {
-          // const token = req.headers.authorization?.replace(/[Bb]earer\s?/g, '');
-          // if (!token) throw Error('Token needed');
-          // const payload = jwtService.decode(token);
-          // if (!payload) throw Error('Token not valid');
+          const token = req.headers.authorization?.replace(/[Bb]earer\s?/g, '');
+          if (!token) throw Error('Token needed');
+          const payload = jwtService.decode(token);
+          if (!payload) throw Error('Token not valid');
         },
       }),
     }),
 
     SeedModule,
+
+    ClientsModule,
   ],
 })
 export class AppModule {}

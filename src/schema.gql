@@ -2,6 +2,22 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Client {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  name: String!
+  email: String!
+  nit: String
+  createdBy: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type User {
   id: ID!
   createdAt: DateTime!
@@ -13,11 +29,6 @@ type User {
   lastUpdatedBy: User
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 """Valid roles for users"""
 enum UserRoles {
   admin
@@ -27,12 +38,17 @@ enum UserRoles {
 type Query {
   users(roles: [UserRoles!] = [], offset: Int = 0, limit: Int = 10, search: String): [User!]!
   user(id: ID!): User!
+  clients: [Client!]!
+  client(id: ID!): Client!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: ID!): User!
+  createClient(createClientInput: CreateClientInput!): Client!
+  updateClient(updateClientInput: UpdateClientInput!): Client!
+  removeClient(id: ID!): Client!
 }
 
 input CreateUserInput {
@@ -61,4 +77,17 @@ input UpdateUserInput {
   roles: [UserRoles!] = [user]
   id: ID!
   deletedAt: DateTime
+}
+
+input CreateClientInput {
+  name: String!
+  email: String!
+  nit: String
+}
+
+input UpdateClientInput {
+  name: String
+  email: String
+  nit: String
+  id: ID!
 }
