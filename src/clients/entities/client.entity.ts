@@ -1,6 +1,15 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+
+import { Project } from './../../projects/entities/project.entity';
 import { User } from './../../users/entities/user.entity';
 
 import { BaseEntity } from './../../common/entities/base.entity';
@@ -33,4 +42,8 @@ export class Client extends BaseEntity {
   @JoinColumn({ name: 'createdBy' })
   @Field(() => User)
   createdBy: User;
+
+  @Field(() => [Project])
+  @OneToMany(() => Project, (project) => project.client, { lazy: true })
+  projects: Project[];
 }

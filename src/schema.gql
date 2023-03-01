@@ -2,6 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Project {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  title: String!
+  client: Client!
+  createdBy: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Client {
   id: ID!
   createdAt: DateTime!
@@ -11,12 +26,8 @@ type Client {
   email: String!
   nit: String
   createdBy: User!
+  projects: [Project!]!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type User {
   id: ID!
@@ -40,6 +51,8 @@ type Query {
   user(id: ID!): User!
   clients: [Client!]!
   client(id: ID!): Client!
+  projects: [Project!]!
+  project(id: ID!): Project!
 }
 
 type Mutation {
@@ -49,6 +62,9 @@ type Mutation {
   createClient(createClientInput: CreateClientInput!): Client!
   updateClient(updateClientInput: UpdateClientInput!): Client!
   removeClient(id: ID!): Client!
+  createProject(createProjectInput: CreateProjectInput!): Project!
+  updateProject(updateProjectInput: UpdateProjectInput!): Project!
+  removeProject(id: ID!): Project!
 }
 
 input CreateUserInput {
@@ -89,5 +105,16 @@ input UpdateClientInput {
   name: String
   email: String
   nit: String
+  id: ID!
+}
+
+input CreateProjectInput {
+  title: String!
+  clientId: ID!
+}
+
+input UpdateProjectInput {
+  title: String
+  clientId: ID
   id: ID!
 }
