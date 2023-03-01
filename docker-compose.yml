@@ -10,4 +10,9 @@ services:
       - .env
     container_name: pg
     volumes:
-      - ./pg/data:/var/lib/postgresql/data
+      - pg:/var/lib/postgresql/data
+    stdin_open: true
+    tty: true
+
+volumes:
+  pg:

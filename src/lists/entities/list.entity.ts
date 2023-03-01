@@ -1,9 +1,10 @@
+import { Field, ObjectType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
-import { ObjectType, Field } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Request } from 'src/requests/entities/request.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from './../../common/entities/base.entity';
 import { Project } from './../../projects/entities/project.entity';
-import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Entity('lists')
@@ -25,4 +26,8 @@ export class List extends BaseEntity {
   @JoinColumn({ name: 'createdBy' })
   @Field(() => User)
   createdBy: User;
+
+  @Field(() => [Request])
+  @OneToMany(() => Request, (request) => request.list, { lazy: true })
+  requests: Request[];
 }

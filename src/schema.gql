@@ -2,6 +2,24 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Request {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  title: String!
+  description: String
+  dueDate: DateTime
+  endDate: DateTime
+  list: List!
+  createdBy: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type List {
   id: ID!
   createdAt: DateTime!
@@ -10,12 +28,8 @@ type List {
   title: String!
   project: Project!
   createdBy: User!
+  requests: [Request!]!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Project {
   id: ID!
@@ -66,6 +80,8 @@ type Query {
   project(id: ID!): Project!
   lists: [List!]!
   list(id: ID!): List!
+  requests: [Request!]!
+  request(id: ID!): Request!
 }
 
 type Mutation {
@@ -81,6 +97,9 @@ type Mutation {
   createList(createListInput: CreateListInput!): List!
   updateList(updateListInput: UpdateListInput!): List!
   removeList(id: ID!): List!
+  createRequest(createRequestInput: CreateRequestInput!): Request!
+  updateRequest(updateRequestInput: UpdateRequestInput!): Request!
+  removeRequest(id: ID!): Request!
 }
 
 input CreateUserInput {
@@ -143,5 +162,22 @@ input CreateListInput {
 input UpdateListInput {
   title: String
   projectId: ID
+  id: ID!
+}
+
+input CreateRequestInput {
+  title: String!
+  listId: ID!
+  description: String
+  dueDate: DateTime
+  endDate: DateTime
+}
+
+input UpdateRequestInput {
+  title: String
+  listId: ID
+  description: String
+  dueDate: DateTime
+  endDate: DateTime
   id: ID!
 }
