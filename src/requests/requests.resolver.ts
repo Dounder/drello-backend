@@ -1,6 +1,7 @@
 import { ParseUUIDPipe } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Auth, GetUser } from 'src/auth/decorators';
+import { PaginationArgs, SearchArgs } from 'src/common/dto';
 import { UserRoles } from 'src/common/types/user-roles';
 import { User } from './../users/entities/user.entity';
 import { CreateRequestInput } from './dto/create-request.input';
@@ -22,8 +23,11 @@ export class RequestsResolver {
   }
 
   @Query(() => [Request], { name: 'requests' })
-  findAll() {
-    return this.requestsService.findAll();
+  findAll(
+    @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs,
+  ) {
+    return this.requestsService.findAll(paginationArgs, searchArgs);
   }
 
   @Query(() => Request, { name: 'request' })
@@ -46,4 +50,6 @@ export class RequestsResolver {
   removeRequest(@Args('id', { type: () => ID }, ParseUUIDPipe) id: string) {
     return this.requestsService.remove(id);
   }
+
+  // TODO: implement custom resolver
 }

@@ -7,6 +7,7 @@ import { ListsService } from './../lists/lists.service';
 import { CreateRequestInput } from './dto/create-request.input';
 import { UpdateRequestInput } from './dto/update-request.input';
 import { Request } from './entities/request.entity';
+import { PaginationArgs, SearchArgs } from 'src/common/dto';
 
 @Injectable()
 export class RequestsService {
@@ -30,8 +31,22 @@ export class RequestsService {
     return this.requestRepository.save(request);
   }
 
-  async findAll(): Promise<Request[]> {
-    return this.requestRepository.findBy({});
+  async findAll(
+    paginationArgs: PaginationArgs,
+    searchArgs: SearchArgs,
+  ): Promise<Request[]> {
+    const { limit, offset } = paginationArgs;
+    const { search } = searchArgs;
+
+    const query = this.requestRepository
+      .createQueryBuilder()
+      .take(limit)
+      .skip(offset)
+      .withDeleted();
+
+    if (search) query.andWhere(`title ilike :text`, { text: `%${search}%` });
+
+    return query.getMany();
   }
 
   async findOne(id: string): Promise<Request> {

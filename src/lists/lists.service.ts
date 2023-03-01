@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationArgs, SearchArgs } from 'src/common/dto';
 import { HandleExceptions } from 'src/common/helpers/handle-exceptions.helper';
 import { Repository } from 'typeorm';
 import { ProjectsService } from './../projects/projects.service';
@@ -28,8 +29,22 @@ export class ListsService {
     return await this.listRepository.save(list);
   }
 
-  async findAll(): Promise<List[]> {
-    return await this.listRepository.findBy({});
+  async findAll(
+    paginationArgs: PaginationArgs,
+    searchArgs: SearchArgs,
+  ): Promise<List[]> {
+    const { limit, offset } = paginationArgs;
+    const { search } = searchArgs;
+
+    const query = this.listRepository
+      .createQueryBuilder()
+      .take(limit)
+      .skip(offset)
+      .withDeleted();
+
+    if (search) query.andWhere(`title ilike :text`, { text: `%${search}%` });
+
+    return query.getMany();
   }
 
   async findOne(id: string): Promise<List> {

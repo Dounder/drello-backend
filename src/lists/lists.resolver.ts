@@ -1,6 +1,7 @@
 import { ParseUUIDPipe } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Auth, GetUser } from 'src/auth/decorators';
+import { PaginationArgs, SearchArgs } from 'src/common/dto';
 import { UserRoles } from 'src/common/types/user-roles';
 import { User } from './../users/entities/user.entity';
 import { CreateListInput } from './dto/create-list.input';
@@ -22,8 +23,11 @@ export class ListsResolver {
   }
 
   @Query(() => [List], { name: 'lists' })
-  findAll() {
-    return this.listsService.findAll();
+  findAll(
+    @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs,
+  ) {
+    return this.listsService.findAll(paginationArgs, searchArgs);
   }
 
   @Query(() => List, { name: 'list' })
@@ -41,4 +45,6 @@ export class ListsResolver {
   removeList(@Args('id', { type: () => ID }, ParseUUIDPipe) id: string) {
     return this.listsService.remove(id);
   }
+
+  // TODO: implement custom resolver
 }

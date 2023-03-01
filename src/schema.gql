@@ -74,13 +74,13 @@ enum UserRoles {
 type Query {
   users(roles: [UserRoles!] = [], offset: Int = 0, limit: Int = 10, search: String): [User!]!
   user(id: ID!): User!
-  clients: [Client!]!
+  clients(offset: Int = 0, limit: Int = 10, search: String): [Client!]!
   client(id: ID!): Client!
-  projects: [Project!]!
+  projects(offset: Int = 0, limit: Int = 10, search: String): [Project!]!
   project(id: ID!): Project!
-  lists: [List!]!
+  lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
   list(id: ID!): List!
-  requests: [Request!]!
+  requests(offset: Int = 0, limit: Int = 10, search: String): [Request!]!
   request(id: ID!): Request!
 }
 

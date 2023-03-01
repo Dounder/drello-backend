@@ -1,8 +1,9 @@
-import { ClientsService } from './../clients/clients.service';
-import { HandleExceptions } from 'src/common/helpers/handle-exceptions.helper';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationArgs, SearchArgs } from 'src/common/dto';
+import { HandleExceptions } from 'src/common/helpers/handle-exceptions.helper';
 import { Repository } from 'typeorm';
+import { ClientsService } from './../clients/clients.service';
 import { User } from './../users/entities/user.entity';
 import { CreateProjectInput } from './dto/create-project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
@@ -36,8 +37,22 @@ export class ProjectsService {
     }
   }
 
-  async findAll(): Promise<Project[]> {
-    return await this.projectRepository.findBy({});
+  async findAll(
+    paginationArgs: PaginationArgs,
+    searchArgs: SearchArgs,
+  ): Promise<Project[]> {
+    const { limit, offset } = paginationArgs;
+    const { search } = searchArgs;
+
+    const query = this.projectRepository
+      .createQueryBuilder()
+      .take(limit)
+      .skip(offset)
+      .withDeleted();
+
+    if (search) query.andWhere(`title ilike :text`, { text: `%${search}%` });
+
+    return query.getMany();
   }
 
   async findOne(id: string): Promise<Project> {
