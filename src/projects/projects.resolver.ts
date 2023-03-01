@@ -1,6 +1,7 @@
 import { ParseUUIDPipe } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Auth, GetUser } from 'src/auth/decorators';
+import { UserRoles } from './../common/types/user-roles';
 import { User } from './../users/entities/user.entity';
 import { CreateProjectInput } from './dto/create-project.input';
 import { UpdateProjectInput } from './dto/update-project.input';
@@ -41,6 +42,7 @@ export class ProjectsResolver {
   }
 
   @Mutation(() => Project)
+  @Auth(UserRoles.admin)
   removeProject(@Args('id', { type: () => ID }, ParseUUIDPipe) id: string) {
     return this.projectsService.remove(id);
   }
