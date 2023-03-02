@@ -37,8 +37,7 @@ export class ClientsService {
     const query = this.clientRepository
       .createQueryBuilder()
       .take(limit)
-      .skip(offset)
-      .withDeleted();
+      .skip(offset);
 
     if (search) query.andWhere(`name ilike :text`, { text: `%${search}%` });
 

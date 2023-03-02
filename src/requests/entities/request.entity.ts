@@ -1,7 +1,8 @@
+import { SubRequest } from './../../sub-requests/entities/sub-request.entity';
 import { List } from './../../lists/entities/list.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from './../../common/entities/base.entity';
 import { User } from './../../users/entities/user.entity';
 
@@ -40,4 +41,10 @@ export class Request extends BaseEntity {
   })
   @JoinColumn({ name: 'createdBy' })
   createdBy: User;
+
+  @Field(() => [SubRequest])
+  @OneToMany(() => SubRequest, (subRequest) => subRequest.request, {
+    lazy: true,
+  })
+  subRequests: SubRequest[];
 }

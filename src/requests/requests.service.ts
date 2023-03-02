@@ -41,8 +41,7 @@ export class RequestsService {
     const query = this.requestRepository
       .createQueryBuilder()
       .take(limit)
-      .skip(offset)
-      .withDeleted();
+      .skip(offset);
 
     if (search) query.andWhere(`title ilike :text`, { text: `%${search}%` });
 

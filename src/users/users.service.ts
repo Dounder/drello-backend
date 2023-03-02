@@ -40,8 +40,7 @@ export class UsersService {
     const query = this.userRepository
       .createQueryBuilder()
       .take(limit)
-      .skip(offset)
-      .withDeleted();
+      .skip(offset);
 
     if (search) query.andWhere(`username ilike :text`, { text: `%${search}%` });
 

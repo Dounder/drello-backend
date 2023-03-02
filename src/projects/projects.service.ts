@@ -47,8 +47,7 @@ export class ProjectsService {
     const query = this.projectRepository
       .createQueryBuilder()
       .take(limit)
-      .skip(offset)
-      .withDeleted();
+      .skip(offset);
 
     if (search) query.andWhere(`title ilike :text`, { text: `%${search}%` });
 

@@ -16,6 +16,7 @@ import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { ListsModule } from './lists/lists.module';
 import { RequestsModule } from './requests/requests.module';
+import { SubRequestsModule } from './sub-requests/sub-requests.module';
 
 @Module({
   imports: [
@@ -73,6 +74,8 @@ import { RequestsModule } from './requests/requests.module';
     ListsModule,
 
     RequestsModule,
+
+    SubRequestsModule,
   ],
 })
 export class AppModule {}

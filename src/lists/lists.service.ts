@@ -39,8 +39,7 @@ export class ListsService {
     const query = this.listRepository
       .createQueryBuilder()
       .take(limit)
-      .skip(offset)
-      .withDeleted();
+      .skip(offset);
 
     if (search) query.andWhere(`title ilike :text`, { text: `%${search}%` });
 
