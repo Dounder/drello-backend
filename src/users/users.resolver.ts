@@ -60,4 +60,6 @@ export class UsersResolver {
   ): Promise<User> {
     return await this.usersService.remove(id);
   }
+
+  // TODO: implement custom resolver
 }

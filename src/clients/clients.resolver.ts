@@ -1,6 +1,7 @@
 import { ParseUUIDPipe } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Auth, GetUser } from 'src/auth/decorators';
+import { PaginationArgs, SearchArgs } from 'src/common/dto';
 import { UserRoles } from 'src/common/types/user-roles';
 import { User } from 'src/users/entities/user.entity';
 
@@ -23,8 +24,11 @@ export class ClientsResolver {
   }
 
   @Query(() => [Client], { name: 'clients' })
-  findAll(): Promise<Client[]> {
-    return this.clientsService.findAll();
+  findAll(
+    @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs,
+  ): Promise<Client[]> {
+    return this.clientsService.findAll(paginationArgs, searchArgs);
   }
 
   @Query(() => Client, { name: 'client' })
@@ -48,4 +52,6 @@ export class ClientsResolver {
   ): Promise<Client> {
     return this.clientsService.remove(id);
   }
+
+  // TODO: implement custom resolver
 }

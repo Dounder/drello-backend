@@ -13,6 +13,11 @@ import { ENV_CONFIG } from './config/app.config';
 import { JoiValidationSchema } from './config/joi.config';
 import { SeedModule } from './seed/seed.module';
 import { UsersModule } from './users/users.module';
+import { ProjectsModule } from './projects/projects.module';
+import { ListsModule } from './lists/lists.module';
+import { RequestsModule } from './requests/requests.module';
+import { SubRequestsModule } from './sub-requests/sub-requests.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -64,6 +69,16 @@ import { UsersModule } from './users/users.module';
     SeedModule,
 
     ClientsModule,
+
+    ProjectsModule,
+
+    ListsModule,
+
+    RequestsModule,
+
+    SubRequestsModule,
+
+    TasksModule,
   ],
 })
 export class AppModule {}

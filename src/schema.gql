@@ -2,6 +2,70 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Task {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  text: String!
+  done: Boolean!
+  dueDate: DateTime
+  createdBy: User!
+  subRequest: SubRequest!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type SubRequest {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  title: String!
+  request: Request!
+  createdBy: User!
+  tasks: [Task!]!
+}
+
+type Request {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  title: String!
+  description: String
+  dueDate: DateTime
+  endDate: DateTime
+  list: List!
+  createdBy: User!
+  subRequests: [SubRequest!]!
+}
+
+type List {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  title: String!
+  project: Project!
+  createdBy: User!
+  requests: [Request!]!
+}
+
+type Project {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  title: String!
+  client: Client!
+  createdBy: User!
+  lists: [List!]!
+}
+
 type Client {
   id: ID!
   createdAt: DateTime!
@@ -11,12 +75,8 @@ type Client {
   email: String!
   nit: String
   createdBy: User!
+  projects: [Project!]!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type User {
   id: ID!
@@ -38,8 +98,18 @@ enum UserRoles {
 type Query {
   users(roles: [UserRoles!] = [], offset: Int = 0, limit: Int = 10, search: String): [User!]!
   user(id: ID!): User!
-  clients: [Client!]!
+  clients(offset: Int = 0, limit: Int = 10, search: String): [Client!]!
   client(id: ID!): Client!
+  projects(offset: Int = 0, limit: Int = 10, search: String): [Project!]!
+  project(id: ID!): Project!
+  lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
+  list(id: ID!): List!
+  requests(offset: Int = 0, limit: Int = 10, search: String): [Request!]!
+  request(id: ID!): Request!
+  subRequests(offset: Int = 0, limit: Int = 10, search: String): [SubRequest!]!
+  subRequest(id: ID!): SubRequest!
+  tasks(offset: Int = 0, limit: Int = 10, search: String): [Task!]!
+  task(id: ID!): Task!
 }
 
 type Mutation {
@@ -49,6 +119,21 @@ type Mutation {
   createClient(createClientInput: CreateClientInput!): Client!
   updateClient(updateClientInput: UpdateClientInput!): Client!
   removeClient(id: ID!): Client!
+  createProject(createProjectInput: CreateProjectInput!): Project!
+  updateProject(updateProjectInput: UpdateProjectInput!): Project!
+  removeProject(id: ID!): Project!
+  createList(createListInput: CreateListInput!): List!
+  updateList(updateListInput: UpdateListInput!): List!
+  removeList(id: ID!): List!
+  createRequest(createRequestInput: CreateRequestInput!): Request!
+  updateRequest(updateRequestInput: UpdateRequestInput!): Request!
+  removeRequest(id: ID!): Request!
+  createSubRequest(createSubRequestInput: CreateSubRequestInput!): SubRequest!
+  updateSubRequest(updateSubRequestInput: UpdateSubRequestInput!): SubRequest!
+  removeSubRequest(id: ID!): SubRequest!
+  createTask(createTaskInput: CreateTaskInput!): Task!
+  updateTask(updateTaskInput: UpdateTaskInput!): Task!
+  removeTask(id: ID!): Task!
 }
 
 input CreateUserInput {
@@ -89,5 +174,70 @@ input UpdateClientInput {
   name: String
   email: String
   nit: String
+  id: ID!
+}
+
+input CreateProjectInput {
+  title: String!
+  clientId: ID!
+}
+
+input UpdateProjectInput {
+  title: String
+  clientId: ID
+  id: ID!
+}
+
+input CreateListInput {
+  title: String!
+  projectId: ID!
+}
+
+input UpdateListInput {
+  title: String
+  projectId: ID
+  id: ID!
+}
+
+input CreateRequestInput {
+  title: String!
+  listId: ID!
+  description: String
+  dueDate: DateTime
+  endDate: DateTime
+}
+
+input UpdateRequestInput {
+  title: String
+  listId: ID
+  description: String
+  dueDate: DateTime
+  endDate: DateTime
+  id: ID!
+}
+
+input CreateSubRequestInput {
+  title: String!
+  requestId: ID!
+}
+
+input UpdateSubRequestInput {
+  title: String
+  requestId: ID
+  id: ID!
+}
+
+input CreateTaskInput {
+  text: String!
+  done: Boolean = false
+  dueDate: DateTime
+  subRequestId: ID!
+}
+
+input UpdateTaskInput {
+  text: String
+  done: Boolean = false
+  dueDate: DateTime
+  subRequestId: ID
   id: ID!
 }
