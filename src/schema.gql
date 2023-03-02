@@ -2,6 +2,23 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Task {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  text: String!
+  done: Boolean!
+  dueDate: DateTime
+  createdBy: User!
+  subRequest: SubRequest!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type SubRequest {
   id: ID!
   createdAt: DateTime!
@@ -10,12 +27,8 @@ type SubRequest {
   title: String!
   request: Request!
   createdBy: User!
+  tasks: [Task!]!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Request {
   id: ID!
@@ -93,8 +106,10 @@ type Query {
   list(id: ID!): List!
   requests(offset: Int = 0, limit: Int = 10, search: String): [Request!]!
   request(id: ID!): Request!
-  subRequests: [SubRequest!]!
+  subRequests(offset: Int = 0, limit: Int = 10, search: String): [SubRequest!]!
   subRequest(id: ID!): SubRequest!
+  tasks(offset: Int = 0, limit: Int = 10, search: String): [Task!]!
+  task(id: ID!): Task!
 }
 
 type Mutation {
@@ -116,6 +131,9 @@ type Mutation {
   createSubRequest(createSubRequestInput: CreateSubRequestInput!): SubRequest!
   updateSubRequest(updateSubRequestInput: UpdateSubRequestInput!): SubRequest!
   removeSubRequest(id: ID!): SubRequest!
+  createTask(createTaskInput: CreateTaskInput!): Task!
+  updateTask(updateTaskInput: UpdateTaskInput!): Task!
+  removeTask(id: ID!): Task!
 }
 
 input CreateUserInput {
@@ -206,5 +224,20 @@ input CreateSubRequestInput {
 input UpdateSubRequestInput {
   title: String
   requestId: ID
+  id: ID!
+}
+
+input CreateTaskInput {
+  text: String!
+  done: Boolean = false
+  dueDate: DateTime
+  subRequestId: ID!
+}
+
+input UpdateTaskInput {
+  text: String
+  done: Boolean = false
+  dueDate: DateTime
+  subRequestId: ID
   id: ID!
 }

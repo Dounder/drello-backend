@@ -1,6 +1,7 @@
+import { Task } from './../../tasks/entities/task.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from './../../common/entities/base.entity';
 import { Request } from './../../requests/entities/request.entity';
 import { User } from './../../users/entities/user.entity';
@@ -25,4 +26,8 @@ export class SubRequest extends BaseEntity {
   })
   @JoinColumn({ name: 'createdBy' })
   createdBy: User;
+
+  @Field(() => [Task])
+  @OneToMany(() => Task, (task) => task.subRequest, { lazy: true })
+  tasks: Task[];
 }

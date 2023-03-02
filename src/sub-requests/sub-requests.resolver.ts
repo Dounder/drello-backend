@@ -22,7 +22,10 @@ export class SubRequestsResolver {
   }
 
   @Query(() => [SubRequest], { name: 'subRequests' })
-  findAll(paginationArgs: PaginationArgs, searchArgs: SearchArgs) {
+  findAll(
+    @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs,
+  ) {
     return this.subRequestsService.findAll(paginationArgs, searchArgs);
   }
 
