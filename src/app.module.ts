@@ -57,6 +57,7 @@ import { TasksModule } from './tasks/tasks.module';
         playground: false,
         autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
         plugins: [ApolloServerPluginLandingPageLocalDefault],
+        path: 'api/v1/graphql',
         context: ({ req }) => {
           const token = req.headers.authorization?.replace(/[Bb]earer\s?/g, '');
           if (!token) throw Error('Token needed');
