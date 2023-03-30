@@ -1,9 +1,9 @@
-import { ErrorCodes } from './../common/helpers/errors-codes.helper';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { isUUID } from 'class-validator';
-import { ArrayOverlap, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { isUUID } from 'class-validator';
+import { ArrayOverlap, IsNull, Not, Repository } from 'typeorm';
+import { ErrorCodes } from './../common/helpers/errors-codes.helper';
 
 import { PaginationArgs, SearchArgs } from './../common/dto';
 import { HandleExceptions } from './../common/helpers/handle-exceptions.helper';
@@ -20,6 +20,12 @@ export class UsersService {
 
   async create(createUserInput: CreateUserInput): Promise<User> {
     try {
+      if (await this.CheckEmailExists(createUserInput.email))
+        throw new BadRequestException({
+          message: `User with email ${createUserInput.email} already exists but is inactive, please contact the administrator`,
+          error: ErrorCodes.ALREADY_EXISTS,
+        });
+
       const user = this.userRepository.create({
         ...createUserInput,
         password: bcrypt.hashSync(createUserInput.password, 10),
@@ -74,5 +80,9 @@ export class UsersService {
     const user = await this.findOneByTerm(id);
     await this.userRepository.softRemove(user);
     return { ...user, id };
+  }
+
+  private async CheckEmailExists(email: string): Promise<boolean> {
+    return !!(await this.userRepository.findOne({ where: { email, deletedAt: Not(IsNull()) } }));
   }
 }

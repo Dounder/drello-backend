@@ -1,9 +1,9 @@
 import { ErrorCodes } from './../common/helpers/errors-codes.helper';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationArgs, SearchArgs } from 'src/common/dto';
 import { HandleExceptions } from 'src/common/helpers/handle-exceptions.helper';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { User } from './../users/entities/user.entity';
 
 import { CreateClientInput } from './dto/create-client.input';
@@ -18,11 +18,22 @@ export class ClientsService {
   ) {}
 
   async create(createClientInput: CreateClientInput, user: User): Promise<Client> {
-    const client = this.clientRepository.create({
-      ...createClientInput,
-      createdBy: user,
-    });
-    return await this.clientRepository.save(client);
+    try {
+      if (await this.CheckEmailExists(createClientInput.email))
+        throw new BadRequestException({
+          message: `Client with email ${createClientInput.email} already exists but is inactive, please contact the administrator`,
+          error: ErrorCodes.ALREADY_EXISTS,
+        });
+
+      const client = this.clientRepository.create({
+        ...createClientInput,
+        createdBy: user,
+      });
+
+      return await this.clientRepository.save(client);
+    } catch (error) {
+      HandleExceptions(error);
+    }
   }
 
   async findAll(paginationArgs: PaginationArgs, searchArgs: SearchArgs): Promise<Client[]> {
@@ -38,11 +49,8 @@ export class ClientsService {
 
   async findOne(id: string): Promise<Client> {
     const client = await this.clientRepository.findOneBy({ id });
-    if (!client)
-      throw new NotFoundException({
-        message: `Client with ${id} not found`,
-        error: ErrorCodes.NOT_FOUND,
-      });
+
+    if (!client) throw new NotFoundException({ message: `Client with ${id} not found`, error: ErrorCodes.NOT_FOUND });
 
     return client;
   }
@@ -63,5 +71,9 @@ export class ClientsService {
     const client = await this.findOne(id);
     await this.clientRepository.softRemove(client);
     return { id, ...client };
+  }
+
+  private async CheckEmailExists(email: string): Promise<boolean> {
+    return !!(await this.clientRepository.findOne({ where: { email, deletedAt: Not(IsNull()) } }));
   }
 }
