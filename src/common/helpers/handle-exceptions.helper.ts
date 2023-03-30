@@ -4,7 +4,6 @@ import { BadRequestException, InternalServerErrorException, Logger, NotFoundExce
 const logger = new Logger('Exception');
 
 export function HandleExceptions(error: any) {
-  console.log({ error });
   // IX unique key violation error code in postgres
   if (error.code === '23505')
     throw new BadRequestException({
@@ -17,6 +16,12 @@ export function HandleExceptions(error: any) {
     throw new NotFoundException({
       message: error.message,
       error: ErrorCodes.NOT_FOUND,
+    });
+
+  if (error.status === 400)
+    throw new BadRequestException({
+      message: error.message,
+      error: ErrorCodes.BAD_REQUEST,
     });
 
   // Unexpected error

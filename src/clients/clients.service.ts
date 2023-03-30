@@ -19,11 +19,7 @@ export class ClientsService {
 
   async create(createClientInput: CreateClientInput, user: User): Promise<Client> {
     try {
-      if (await this.CheckEmailExists(createClientInput.email))
-        throw new BadRequestException({
-          message: `Client with email ${createClientInput.email} already exists but is inactive, please contact the administrator`,
-          error: ErrorCodes.ALREADY_EXISTS,
-        });
+      await this.CheckEmailExists(createClientInput.email);
 
       const client = this.clientRepository.create({
         ...createClientInput,
@@ -73,7 +69,16 @@ export class ClientsService {
     return { id, ...client };
   }
 
-  private async CheckEmailExists(email: string): Promise<boolean> {
-    return !!(await this.clientRepository.findOne({ where: { email, deletedAt: Not(IsNull()) } }));
+  private async CheckEmailExists(email: string): Promise<void> {
+    const client = await this.clientRepository.findOne({
+      where: { email, deletedAt: Not(IsNull()) },
+      withDeleted: true,
+    });
+
+    if (client)
+      throw new BadRequestException({
+        message: `Client with email ${email} already exists, but is inactivated, talk to your administrator to activate it`,
+        error: ErrorCodes.ALREADY_EXISTS,
+      });
   }
 }

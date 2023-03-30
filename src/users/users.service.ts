@@ -20,11 +20,7 @@ export class UsersService {
 
   async create(createUserInput: CreateUserInput): Promise<User> {
     try {
-      if (await this.CheckEmailExists(createUserInput.email))
-        throw new BadRequestException({
-          message: `User with email ${createUserInput.email} already exists but is inactive, please contact the administrator`,
-          error: ErrorCodes.ALREADY_EXISTS,
-        });
+      await this.CheckEmailExists(createUserInput.email);
 
       const user = this.userRepository.create({
         ...createUserInput,
@@ -82,7 +78,13 @@ export class UsersService {
     return { ...user, id };
   }
 
-  private async CheckEmailExists(email: string): Promise<boolean> {
-    return !!(await this.userRepository.findOne({ where: { email, deletedAt: Not(IsNull()) } }));
+  private async CheckEmailExists(email: string): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { email, deletedAt: Not(IsNull()) }, withDeleted: true });
+
+    if (user)
+      throw new BadRequestException({
+        message: `User with email ${email} already exists but is inactive, please contact the administrator`,
+        error: ErrorCodes.BAD_REQUEST,
+      });
   }
 }
