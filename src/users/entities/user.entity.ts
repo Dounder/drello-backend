@@ -2,14 +2,7 @@ import { Client } from './../../clients/entities/client.entity';
 import { UserRoles } from './../../common/types/user-roles';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
-import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from './../../common/entities/base.entity';
 
 @ObjectType()

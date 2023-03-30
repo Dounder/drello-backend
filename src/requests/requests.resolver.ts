@@ -15,18 +15,12 @@ export class RequestsResolver {
   constructor(private readonly requestsService: RequestsService) {}
 
   @Mutation(() => Request)
-  createRequest(
-    @Args('createRequestInput') createRequestInput: CreateRequestInput,
-    @GetUser() user: User,
-  ) {
+  createRequest(@Args('createRequestInput') createRequestInput: CreateRequestInput, @GetUser() user: User) {
     return this.requestsService.create(createRequestInput, user);
   }
 
   @Query(() => [Request], { name: 'requests' })
-  findAll(
-    @Args() paginationArgs: PaginationArgs,
-    @Args() searchArgs: SearchArgs,
-  ) {
+  findAll(@Args() paginationArgs: PaginationArgs, @Args() searchArgs: SearchArgs) {
     return this.requestsService.findAll(paginationArgs, searchArgs);
   }
 
@@ -36,13 +30,8 @@ export class RequestsResolver {
   }
 
   @Mutation(() => Request)
-  updateRequest(
-    @Args('updateRequestInput') updateRequestInput: UpdateRequestInput,
-  ) {
-    return this.requestsService.update(
-      updateRequestInput.id,
-      updateRequestInput,
-    );
+  updateRequest(@Args('updateRequestInput') updateRequestInput: UpdateRequestInput) {
+    return this.requestsService.update(updateRequestInput.id, updateRequestInput);
   }
 
   @Mutation(() => Request)

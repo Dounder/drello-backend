@@ -15,18 +15,12 @@ export class ProjectsResolver {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Mutation(() => Project)
-  createProject(
-    @Args('createProjectInput') createProjectInput: CreateProjectInput,
-    @GetUser() user: User,
-  ) {
+  createProject(@Args('createProjectInput') createProjectInput: CreateProjectInput, @GetUser() user: User) {
     return this.projectsService.create(createProjectInput, user);
   }
 
   @Query(() => [Project], { name: 'projects' })
-  findAll(
-    @Args() paginationArgs: PaginationArgs,
-    @Args() searchArgs: SearchArgs,
-  ): Promise<Project[]> {
+  findAll(@Args() paginationArgs: PaginationArgs, @Args() searchArgs: SearchArgs): Promise<Project[]> {
     return this.projectsService.findAll(paginationArgs, searchArgs);
   }
 
@@ -36,13 +30,8 @@ export class ProjectsResolver {
   }
 
   @Mutation(() => Project)
-  updateProject(
-    @Args('updateProjectInput') updateProjectInput: UpdateProjectInput,
-  ) {
-    return this.projectsService.update(
-      updateProjectInput.id,
-      updateProjectInput,
-    );
+  updateProject(@Args('updateProjectInput') updateProjectInput: UpdateProjectInput) {
+    return this.projectsService.update(updateProjectInput.id, updateProjectInput);
   }
 
   @Mutation(() => Project)

@@ -1,13 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import {
-  IsBoolean,
-  IsDate,
-  IsOptional,
-  IsString,
-  IsUUID,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsBoolean, IsDate, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
 
 @InputType()
 export class CreateTaskInput {

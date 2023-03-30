@@ -1,5 +1,5 @@
 import { Field, InputType, ID } from '@nestjs/graphql';
-import { MaxLength, MinLength, IsUUID } from 'class-validator';
+import { MaxLength, MinLength, IsUUID, IsOptional } from 'class-validator';
 
 @InputType()
 export class CreateProjectInput {
@@ -8,7 +8,8 @@ export class CreateProjectInput {
   @MinLength(2)
   title: string;
 
-  @Field(() => ID)
+  @Field(() => ID, { nullable: true })
   @IsUUID()
-  clientId: string;
+  @IsOptional()
+  clientId?: string;
 }

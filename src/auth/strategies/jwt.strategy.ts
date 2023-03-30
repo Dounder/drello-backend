@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -13,10 +9,7 @@ import { JwtPayload } from './../interfaces';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private readonly usersService: UsersService,
-    configService: ConfigService,
-  ) {
+  constructor(private readonly usersService: UsersService, configService: ConfigService) {
     super({
       secretOrKey: configService.get('jwtSecret'),
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -30,8 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     if (!user) throw new UnauthorizedException(`Token is not valid`);
 
-    if (user.deletedAt)
-      throw new ForbiddenException(`User is inactive talk with admin`);
+    if (user.deletedAt) throw new ForbiddenException(`User is inactive talk with admin`);
 
     return user;
   }

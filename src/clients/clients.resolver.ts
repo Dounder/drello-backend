@@ -24,32 +24,23 @@ export class ClientsResolver {
   }
 
   @Query(() => [Client], { name: 'clients' })
-  findAll(
-    @Args() paginationArgs: PaginationArgs,
-    @Args() searchArgs: SearchArgs,
-  ): Promise<Client[]> {
+  findAll(@Args() paginationArgs: PaginationArgs, @Args() searchArgs: SearchArgs): Promise<Client[]> {
     return this.clientsService.findAll(paginationArgs, searchArgs);
   }
 
   @Query(() => Client, { name: 'client' })
-  findOne(
-    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
-  ): Promise<Client> {
+  findOne(@Args('id', { type: () => ID }, ParseUUIDPipe) id: string): Promise<Client> {
     return this.clientsService.findOne(id);
   }
 
   @Mutation(() => Client)
-  updateClient(
-    @Args('updateClientInput') updateClientInput: UpdateClientInput,
-  ): Promise<Client> {
+  updateClient(@Args('updateClientInput') updateClientInput: UpdateClientInput): Promise<Client> {
     return this.clientsService.update(updateClientInput.id, updateClientInput);
   }
 
   @Mutation(() => Client)
   @Auth(UserRoles.admin)
-  removeClient(
-    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
-  ): Promise<Client> {
+  removeClient(@Args('id', { type: () => ID }, ParseUUIDPipe) id: string): Promise<Client> {
     return this.clientsService.remove(id);
   }
 

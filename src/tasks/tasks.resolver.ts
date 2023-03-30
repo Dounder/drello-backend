@@ -14,18 +14,12 @@ export class TasksResolver {
   constructor(private readonly tasksService: TasksService) {}
 
   @Mutation(() => Task)
-  createTask(
-    @Args('createTaskInput') createTaskInput: CreateTaskInput,
-    @GetUser() user: User,
-  ) {
+  createTask(@Args('createTaskInput') createTaskInput: CreateTaskInput, @GetUser() user: User) {
     return this.tasksService.create(createTaskInput, user);
   }
 
   @Query(() => [Task], { name: 'tasks' })
-  findAll(
-    @Args() paginationArgs: PaginationArgs,
-    @Args() searchArgs: SearchArgs,
-  ) {
+  findAll(@Args() paginationArgs: PaginationArgs, @Args() searchArgs: SearchArgs) {
     return this.tasksService.findAll(paginationArgs, searchArgs);
   }
 

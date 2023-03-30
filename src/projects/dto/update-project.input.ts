@@ -7,4 +7,8 @@ export class UpdateProjectInput extends PartialType(CreateProjectInput) {
   @Field(() => ID)
   @IsUUID()
   id: string;
+
+  @Field(() => ID)
+  @IsUUID()
+  clientId: string;
 }

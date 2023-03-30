@@ -14,18 +14,12 @@ export class SubRequestsResolver {
   constructor(private readonly subRequestsService: SubRequestsService) {}
 
   @Mutation(() => SubRequest)
-  createSubRequest(
-    @Args('createSubRequestInput') createSubRequestInput: CreateSubRequestInput,
-    @GetUser() user: User,
-  ) {
+  createSubRequest(@Args('createSubRequestInput') createSubRequestInput: CreateSubRequestInput, @GetUser() user: User) {
     return this.subRequestsService.create(createSubRequestInput, user);
   }
 
   @Query(() => [SubRequest], { name: 'subRequests' })
-  findAll(
-    @Args() paginationArgs: PaginationArgs,
-    @Args() searchArgs: SearchArgs,
-  ) {
+  findAll(@Args() paginationArgs: PaginationArgs, @Args() searchArgs: SearchArgs) {
     return this.subRequestsService.findAll(paginationArgs, searchArgs);
   }
 
@@ -35,13 +29,8 @@ export class SubRequestsResolver {
   }
 
   @Mutation(() => SubRequest)
-  updateSubRequest(
-    @Args('updateSubRequestInput') updateSubRequestInput: UpdateSubRequestInput,
-  ) {
-    return this.subRequestsService.update(
-      updateSubRequestInput.id,
-      updateSubRequestInput,
-    );
+  updateSubRequest(@Args('updateSubRequestInput') updateSubRequestInput: UpdateSubRequestInput) {
+    return this.subRequestsService.update(updateSubRequestInput.id, updateSubRequestInput);
   }
 
   @Mutation(() => SubRequest)

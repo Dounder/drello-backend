@@ -1,3 +1,4 @@
+import { ErrorCodes } from './../common/helpers/errors-codes.helper';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { isUUID } from 'class-validator';
@@ -29,59 +30,38 @@ export class UsersService {
     }
   }
 
-  async findAll(
-    roles: UserRoles[],
-    paginationArgs: PaginationArgs,
-    searchArgs: SearchArgs,
-  ): Promise<User[]> {
+  async findAll(roles: UserRoles[], paginationArgs: PaginationArgs, searchArgs: SearchArgs): Promise<User[]> {
     const { limit, offset } = paginationArgs;
     const { search } = searchArgs;
 
-    const query = this.userRepository
-      .createQueryBuilder()
-      .take(limit)
-      .skip(offset);
+    const query = this.userRepository.createQueryBuilder().take(limit).skip(offset);
 
     if (search) query.andWhere(`username ilike :text`, { text: `%${search}%` });
 
     if (roles.length === 0) return query.getMany();
 
-    return query
-      .andWhere({
-        roles: ArrayOverlap(roles),
-      })
-      .getMany();
+    return query.andWhere({ roles: ArrayOverlap(roles) }).getMany();
   }
 
   async findOneByTerm(term: string): Promise<User> {
-    try {
-      return isUUID(term)
-        ? await this.userRepository.findOneOrFail({
-            where: { id: term },
-            withDeleted: true,
-          })
-        : await this.userRepository.findOneOrFail({
-            where: [{ username: term }, { email: term }],
-            withDeleted: true,
-          });
-    } catch (error) {
-      throw new NotFoundException(`User with ${term} not found`);
-    }
+    const user = isUUID(term)
+      ? await this.userRepository.findOne({ where: { id: term }, withDeleted: true })
+      : await this.userRepository.findOne({ where: [{ username: term }, { email: term }], withDeleted: true });
+
+    if (!user)
+      throw new NotFoundException({
+        message: `User with ${term} not found`,
+        error: ErrorCodes.NOT_FOUND,
+      });
+
+    return user;
   }
 
-  async update(
-    id: string,
-    updateUserInput: UpdateUserInput,
-    adminUser?: User,
-  ): Promise<User> {
+  async update(id: string, updateUserInput: UpdateUserInput, adminUser?: User): Promise<User> {
     try {
       const user = await this.findOneByTerm(id);
 
-      if (updateUserInput.password)
-        updateUserInput.password = bcrypt.hashSync(
-          updateUserInput.password,
-          10,
-        );
+      if (updateUserInput.password) updateUserInput.password = bcrypt.hashSync(updateUserInput.password, 10);
 
       user.lastUpdatedBy = adminUser;
       return await this.userRepository.save({ ...user, ...updateUserInput });

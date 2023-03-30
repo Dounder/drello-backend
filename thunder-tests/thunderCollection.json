@@ -1,0 +1,17 @@
+[
+  {
+    "_id": "dbfa1ba2-acae-4e5c-9b1d-9248ef1cb17f",
+    "colName": "[ NEST ] Template",
+    "created": "2023-03-29T21:16:46.421Z",
+    "sortNum": 10000,
+    "folders": [
+      {
+        "_id": "32794eb7-71f4-4b8b-8f6a-716641cf941d",
+        "name": "auth",
+        "containerId": "",
+        "created": "2023-03-29T21:16:46.571Z",
+        "sortNum": 10000
+      }
+    ]
+  }
+]

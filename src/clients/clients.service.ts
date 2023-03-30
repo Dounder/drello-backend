@@ -1,3 +1,4 @@
+import { ErrorCodes } from './../common/helpers/errors-codes.helper';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationArgs, SearchArgs } from 'src/common/dto';
@@ -16,10 +17,7 @@ export class ClientsService {
     private readonly clientRepository: Repository<Client>,
   ) {}
 
-  async create(
-    createClientInput: CreateClientInput,
-    user: User,
-  ): Promise<Client> {
+  async create(createClientInput: CreateClientInput, user: User): Promise<Client> {
     const client = this.clientRepository.create({
       ...createClientInput,
       createdBy: user,
@@ -27,17 +25,11 @@ export class ClientsService {
     return await this.clientRepository.save(client);
   }
 
-  async findAll(
-    paginationArgs: PaginationArgs,
-    searchArgs: SearchArgs,
-  ): Promise<Client[]> {
+  async findAll(paginationArgs: PaginationArgs, searchArgs: SearchArgs): Promise<Client[]> {
     const { limit, offset } = paginationArgs;
     const { search } = searchArgs;
 
-    const query = this.clientRepository
-      .createQueryBuilder()
-      .take(limit)
-      .skip(offset);
+    const query = this.clientRepository.createQueryBuilder().take(limit).skip(offset);
 
     if (search) query.andWhere(`name ilike :text`, { text: `%${search}%` });
 
@@ -45,17 +37,17 @@ export class ClientsService {
   }
 
   async findOne(id: string): Promise<Client> {
-    try {
-      return this.clientRepository.findOneByOrFail({ id });
-    } catch (error) {
-      throw new NotFoundException(`Client with ${id} not found`);
-    }
+    const client = await this.clientRepository.findOneBy({ id });
+    if (!client)
+      throw new NotFoundException({
+        message: `Client with ${id} not found`,
+        error: ErrorCodes.NOT_FOUND,
+      });
+
+    return client;
   }
 
-  async update(
-    id: string,
-    updateClientInput: UpdateClientInput,
-  ): Promise<Client> {
+  async update(id: string, updateClientInput: UpdateClientInput): Promise<Client> {
     try {
       const client = await this.findOne(id);
       return await this.clientRepository.save({

@@ -1,10 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import {
-  CreateDateColumn,
-  DeleteDateColumn,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @ObjectType({ isAbstract: true })
 export class BaseEntity {

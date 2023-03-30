@@ -15,10 +15,13 @@ export class Project extends BaseEntity {
   @MinLength(2)
   title: string;
 
-  @Field(() => Client)
-  @ManyToOne(() => Client, (client) => client.projects, { lazy: true })
+  @Field(() => Client, { nullable: true })
+  @ManyToOne(() => Client, (client) => client.projects, {
+    lazy: true,
+    nullable: true,
+  })
   @JoinColumn({ name: 'clientId' })
-  client: Client;
+  client?: Client;
 
   @ManyToOne(() => User, (user) => user.id, {
     lazy: true,

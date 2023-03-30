@@ -61,7 +61,7 @@ type Project {
   updateAt: DateTime!
   deletedAt: DateTime
   title: String!
-  client: Client!
+  client: Client
   createdBy: User!
   lists: [List!]!
 }
@@ -179,12 +179,12 @@ input UpdateClientInput {
 
 input CreateProjectInput {
   title: String!
-  clientId: ID!
+  clientId: ID
 }
 
 input UpdateProjectInput {
   title: String
-  clientId: ID
+  clientId: ID!
   id: ID!
 }
 

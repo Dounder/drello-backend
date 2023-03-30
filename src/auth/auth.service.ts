@@ -1,10 +1,6 @@
 import { User } from './../users/entities/user.entity';
 import { SignUpDto } from './dto/sign-up.dto';
-import {
-  ForbiddenException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { UsersService } from './../users/users.service';
@@ -14,22 +10,16 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly usersService: UsersService, private readonly jwtService: JwtService) {}
 
   async signIn(signInDto: SignInDto): Promise<AuthResponse> {
     const { password, username } = signInDto;
     const user = await this.usersService.findOneByTerm(username);
 
-    if (user.deletedAt)
-      throw new ForbiddenException(`User is inactive talk with admin`);
+    if (user.deletedAt) throw new ForbiddenException(`User is inactive talk with admin`);
 
     if (!bcrypt.compareSync(password, user.password))
-      throw new UnauthorizedException(
-        `User credentials are not valid ( username / password )`,
-      );
+      throw new UnauthorizedException(`User credentials are not valid ( username / password )`);
 
     return { user, token: this.getJwtToken(user.id) };
   }
