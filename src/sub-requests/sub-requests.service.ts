@@ -1,3 +1,4 @@
+import { ErrorCodes } from './../common/helpers/errors-codes.helper';
 import { HandleExceptions } from 'src/common/helpers/handle-exceptions.helper';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,13 +19,8 @@ export class SubRequestsService {
     private readonly requesetService: RequestsService,
   ) {}
 
-  async create(
-    createSubRequestInput: CreateSubRequestInput,
-    user: User,
-  ): Promise<SubRequest> {
-    const request = await this.requesetService.findOne(
-      createSubRequestInput.requestId,
-    );
+  async create(createSubRequestInput: CreateSubRequestInput, user: User): Promise<SubRequest> {
+    const request = await this.requesetService.findOne(createSubRequestInput.requestId);
     const subRequest = this.subRequestRepository.create({
       ...createSubRequestInput,
       request,
@@ -33,17 +29,11 @@ export class SubRequestsService {
     return await this.subRequestRepository.save(subRequest);
   }
 
-  async findAll(
-    paginationArgs: PaginationArgs,
-    searchArgs: SearchArgs,
-  ): Promise<SubRequest[]> {
+  async findAll(paginationArgs: PaginationArgs, searchArgs: SearchArgs): Promise<SubRequest[]> {
     const { limit, offset } = paginationArgs;
     const { search } = searchArgs;
 
-    const query = this.subRequestRepository
-      .createQueryBuilder()
-      .skip(offset)
-      .take(limit);
+    const query = this.subRequestRepository.createQueryBuilder().skip(offset).take(limit);
 
     if (search) query.andWhere(`title ilike :text`, { text: `%${search}%` });
 
@@ -51,17 +41,18 @@ export class SubRequestsService {
   }
 
   async findOne(id: string): Promise<SubRequest> {
-    try {
-      return this.subRequestRepository.findOneByOrFail({ id });
-    } catch (error) {
-      throw new NotFoundException(`Sub Request with id ${id} not found`);
-    }
+    const subRequest = await this.subRequestRepository.findOneBy({ id });
+
+    if (!subRequest)
+      throw new NotFoundException({
+        message: `SubRequest with ${id} not found`,
+        error: ErrorCodes.NOT_FOUND,
+      });
+
+    return subRequest;
   }
 
-  async update(
-    id: string,
-    updateSubRequestInput: UpdateSubRequestInput,
-  ): Promise<SubRequest> {
+  async update(id: string, updateSubRequestInput: UpdateSubRequestInput): Promise<SubRequest> {
     try {
       const subRequest = await this.findOne(id);
       return this.subRequestRepository.save({

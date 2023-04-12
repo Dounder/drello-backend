@@ -15,18 +15,12 @@ export class ListsResolver {
   constructor(private readonly listsService: ListsService) {}
 
   @Mutation(() => List)
-  createList(
-    @Args('createListInput') createListInput: CreateListInput,
-    @GetUser() user: User,
-  ) {
+  createList(@Args('createListInput') createListInput: CreateListInput, @GetUser() user: User) {
     return this.listsService.create(createListInput, user);
   }
 
   @Query(() => [List], { name: 'lists' })
-  findAll(
-    @Args() paginationArgs: PaginationArgs,
-    @Args() searchArgs: SearchArgs,
-  ) {
+  findAll(@Args() paginationArgs: PaginationArgs, @Args() searchArgs: SearchArgs) {
     return this.listsService.findAll(paginationArgs, searchArgs);
   }
 

@@ -1,3 +1,4 @@
+import { ErrorCodes } from './../common/helpers/errors-codes.helper';
 import { HandleExceptions } from 'src/common/helpers/handle-exceptions.helper';
 import { User } from './../users/entities/user.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -18,10 +19,7 @@ export class RequestsService {
     private readonly listService: ListsService,
   ) {}
 
-  async create(
-    createRequestInput: CreateRequestInput,
-    user: User,
-  ): Promise<Request> {
+  async create(createRequestInput: CreateRequestInput, user: User): Promise<Request> {
     const list = await this.listService.findOne(createRequestInput.listId);
     const request = this.requestRepository.create({
       ...createRequestInput,
@@ -31,17 +29,11 @@ export class RequestsService {
     return this.requestRepository.save(request);
   }
 
-  async findAll(
-    paginationArgs: PaginationArgs,
-    searchArgs: SearchArgs,
-  ): Promise<Request[]> {
+  async findAll(paginationArgs: PaginationArgs, searchArgs: SearchArgs): Promise<Request[]> {
     const { limit, offset } = paginationArgs;
     const { search } = searchArgs;
 
-    const query = this.requestRepository
-      .createQueryBuilder()
-      .take(limit)
-      .skip(offset);
+    const query = this.requestRepository.createQueryBuilder().take(limit).skip(offset);
 
     if (search) query.andWhere(`title ilike :text`, { text: `%${search}%` });
 
@@ -49,17 +41,16 @@ export class RequestsService {
   }
 
   async findOne(id: string): Promise<Request> {
-    try {
-      return await this.requestRepository.findOneByOrFail({ id });
-    } catch (error) {
-      throw new NotFoundException(`Request with ${id} not found`);
-    }
+    const request = await this.requestRepository.findOneBy({ id });
+    if (!request)
+      throw new NotFoundException({
+        message: `Request with ${id} not found`,
+        error: ErrorCodes.NOT_FOUND,
+      });
+    return request;
   }
 
-  async update(
-    id: string,
-    updateRequestInput: UpdateRequestInput,
-  ): Promise<Request> {
+  async update(id: string, updateRequestInput: UpdateRequestInput): Promise<Request> {
     try {
       const request = await this.findOne(id);
       return await this.requestRepository.save({

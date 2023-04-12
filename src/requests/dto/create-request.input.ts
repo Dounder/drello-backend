@@ -1,11 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import {
-  IsDate,
-  IsOptional,
-  IsUUID,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsDate, IsOptional, IsUUID, MaxLength, MinLength } from 'class-validator';
 
 @InputType()
 export class CreateRequestInput {

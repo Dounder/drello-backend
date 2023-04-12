@@ -16,9 +16,7 @@ export class UsersResolver {
 
   @Mutation(() => User, { name: 'createUser' })
   @Auth(UserRoles.admin)
-  async createUser(
-    @Args('createUserInput') createUserInput: CreateUserInput,
-  ): Promise<User> {
+  async createUser(@Args('createUserInput') createUserInput: CreateUserInput): Promise<User> {
     return await this.usersService.create(createUserInput);
   }
 
@@ -29,18 +27,12 @@ export class UsersResolver {
     @Args() paginationArgs: PaginationArgs,
     @Args() searchArgs: SearchArgs,
   ): Promise<User[]> {
-    return await this.usersService.findAll(
-      validRoles.roles,
-      paginationArgs,
-      searchArgs,
-    );
+    return await this.usersService.findAll(validRoles.roles, paginationArgs, searchArgs);
   }
 
   @Query(() => User, { name: 'user' })
   @Auth(UserRoles.admin)
-  async findOne(
-    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
-  ): Promise<User> {
+  async findOne(@Args('id', { type: () => ID }, ParseUUIDPipe) id: string): Promise<User> {
     return await this.usersService.findOneByTerm(id);
   }
 
@@ -55,9 +47,7 @@ export class UsersResolver {
 
   @Mutation(() => User, { name: 'removeUser' })
   @Auth(UserRoles.admin)
-  async removeUser(
-    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
-  ): Promise<User> {
+  async removeUser(@Args('id', { type: () => ID }, ParseUUIDPipe) id: string): Promise<User> {
     return await this.usersService.remove(id);
   }
 

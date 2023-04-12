@@ -1,18 +1,33 @@
-import {
-  BadRequestException,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
+import { ErrorCodes } from './errors-codes.helper';
+import { BadRequestException, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 
 const logger = new Logger('Exception');
 
 export function HandleExceptions(error: any) {
-  switch (error.code) {
-    case '23505':
-      throw new BadRequestException(error.detail.replace('Key ', ''));
+  // IX unique key violation error code in postgres
+  if (error.code === '23505')
+    throw new BadRequestException({
+      message: error.detail,
+      error: ErrorCodes.ALREADY_EXISTS,
+    });
 
-    default:
-      logger.log(error);
-      throw new InternalServerErrorException('Unexpected error, check logs.');
-  }
+  // Not found error code
+  if (error.status === 404)
+    throw new NotFoundException({
+      message: error.message,
+      error: ErrorCodes.NOT_FOUND,
+    });
+
+  if (error.status === 400)
+    throw new BadRequestException({
+      message: error.message,
+      error: ErrorCodes.BAD_REQUEST,
+    });
+
+  // Unexpected error
+  logger.log(error);
+  throw new InternalServerErrorException({
+    message: 'Unexpected error',
+    error: ErrorCodes.UNEXPECTED_ERROR,
+  });
 }

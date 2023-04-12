@@ -1,3 +1,4 @@
+import { ErrorCodes } from './../common/helpers/errors-codes.helper';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationArgs, SearchArgs } from 'src/common/dto';
@@ -18,9 +19,7 @@ export class ListsService {
   ) {}
 
   async create(createListInput: CreateListInput, user: User): Promise<List> {
-    const project = await this.projectService.findOne(
-      createListInput.projectId,
-    );
+    const project = await this.projectService.findOne(createListInput.projectId);
     const list = this.listRepository.create({
       ...createListInput,
       project,
@@ -29,17 +28,11 @@ export class ListsService {
     return await this.listRepository.save(list);
   }
 
-  async findAll(
-    paginationArgs: PaginationArgs,
-    searchArgs: SearchArgs,
-  ): Promise<List[]> {
+  async findAll(paginationArgs: PaginationArgs, searchArgs: SearchArgs): Promise<List[]> {
     const { limit, offset } = paginationArgs;
     const { search } = searchArgs;
 
-    const query = this.listRepository
-      .createQueryBuilder()
-      .take(limit)
-      .skip(offset);
+    const query = this.listRepository.createQueryBuilder().take(limit).skip(offset);
 
     if (search) query.andWhere(`title ilike :text`, { text: `%${search}%` });
 
@@ -47,11 +40,13 @@ export class ListsService {
   }
 
   async findOne(id: string): Promise<List> {
-    try {
-      return await this.listRepository.findOneByOrFail({ id });
-    } catch (error) {
-      throw new NotFoundException(`Client with ${id} not found`);
-    }
+    const list = await this.listRepository.findOneBy({ id });
+    if (!list)
+      throw new NotFoundException({
+        message: `List with ${id} not found`,
+        error: ErrorCodes.NOT_FOUND,
+      });
+    return list;
   }
 
   async update(id: string, updateListInput: UpdateListInput): Promise<List> {

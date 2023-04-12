@@ -15,9 +15,7 @@ async function bootstrap() {
     defaultVersion: '1',
   });
 
-  app.useGlobalPipes(
-    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: false }),
-  );
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: false }));
 
   const port = process.env.PORT || 3000;
   logger.log(`App running on port ${port}`);

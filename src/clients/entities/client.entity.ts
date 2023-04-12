@@ -1,13 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
-import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { Project } from './../../projects/entities/project.entity';
 import { User } from './../../users/entities/user.entity';
