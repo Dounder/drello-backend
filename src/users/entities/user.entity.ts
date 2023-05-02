@@ -1,4 +1,3 @@
-import { Client } from './../../clients/entities/client.entity';
 import { UserRoles } from './../../common/types/user-roles';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
@@ -43,7 +42,4 @@ export class User extends BaseEntity {
   @JoinColumn({ name: 'lastUpdatedBy' })
   @Field(() => User, { nullable: true })
   lastUpdatedBy?: User;
-
-  @OneToMany(() => Client, (client) => client.createdBy, { lazy: true })
-  clientsCreated: Client[];
 }

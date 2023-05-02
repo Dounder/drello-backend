@@ -1,7 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { Client } from './../../clients/entities/client.entity';
 import { BaseEntity } from './../../common/entities/base.entity';
 import { User } from './../../users/entities/user.entity';
 import { List } from './../../lists/entities/list.entity';
@@ -14,14 +13,6 @@ export class Project extends BaseEntity {
   @MaxLength(1000)
   @MinLength(2)
   title: string;
-
-  @Field(() => Client, { nullable: true })
-  @ManyToOne(() => Client, (client) => client.projects, {
-    lazy: true,
-    nullable: true,
-  })
-  @JoinColumn({ name: 'clientId' })
-  client?: Client;
 
   @ManyToOne(() => User, (user) => user.id, {
     lazy: true,

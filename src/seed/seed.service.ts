@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Client } from './../clients/entities/client.entity';
 import { Project } from './../projects/entities/project.entity';
 import { User } from './../users/entities/user.entity';
 import { UsersService } from './../users/users.service';
@@ -21,8 +20,6 @@ export class SeedService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Project)
     private readonly projectService: Repository<Project>,
-    @InjectRepository(Client)
-    private readonly clientService: Repository<Client>,
   ) {
     this.isProd = this.configService.get('state') === 'prod';
   }
@@ -39,7 +36,6 @@ export class SeedService {
 
   async cleanDB() {
     await this.projectService.delete({}); //! Delete all projects
-    await this.clientService.delete({}); //! Delete all clients
     await this.userRepository.delete({}); //! Delete all users
   }
 
