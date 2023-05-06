@@ -2,6 +2,28 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  username: String!
+  email: String!
+  roles: [UserRoles!]!
+  lastUpdatedBy: User
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Valid roles for users"""
+enum UserRoles {
+  admin
+  user
+}
+
 type Task {
   id: ID!
   createdAt: DateTime!
@@ -13,11 +35,6 @@ type Task {
   createdBy: User!
   subRequest: SubRequest!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type SubRequest {
   id: ID!
@@ -50,58 +67,26 @@ type List {
   updateAt: DateTime!
   deletedAt: DateTime
   title: String!
-  project: Project!
+  board: Board!
   createdBy: User!
   requests: [Request!]!
 }
 
-type Project {
+type Board {
   id: ID!
   createdAt: DateTime!
   updateAt: DateTime!
   deletedAt: DateTime
   title: String!
-  client: Client
   createdBy: User!
   lists: [List!]!
-}
-
-type Client {
-  id: ID!
-  createdAt: DateTime!
-  updateAt: DateTime!
-  deletedAt: DateTime
-  name: String!
-  email: String!
-  nit: String
-  createdBy: User!
-  projects: [Project!]!
-}
-
-type User {
-  id: ID!
-  createdAt: DateTime!
-  updateAt: DateTime!
-  deletedAt: DateTime
-  username: String!
-  email: String!
-  roles: [UserRoles!]!
-  lastUpdatedBy: User
-}
-
-"""Valid roles for users"""
-enum UserRoles {
-  admin
-  user
 }
 
 type Query {
   users(roles: [UserRoles!] = [], offset: Int = 0, limit: Int = 10, search: String): [User!]!
   user(id: ID!): User!
-  clients(offset: Int = 0, limit: Int = 10, search: String): [Client!]!
-  client(id: ID!): Client!
-  projects(offset: Int = 0, limit: Int = 10, search: String): [Project!]!
-  project(id: ID!): Project!
+  boards(offset: Int = 0, limit: Int = 10, search: String): [Board!]!
+  board(id: ID!): Board!
   lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
   list(id: ID!): List!
   requests(offset: Int = 0, limit: Int = 10, search: String): [Request!]!
@@ -116,12 +101,9 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: ID!): User!
-  createClient(createClientInput: CreateClientInput!): Client!
-  updateClient(updateClientInput: UpdateClientInput!): Client!
-  removeClient(id: ID!): Client!
-  createProject(createProjectInput: CreateProjectInput!): Project!
-  updateProject(updateProjectInput: UpdateProjectInput!): Project!
-  removeProject(id: ID!): Project!
+  createBoard(createBoardInput: CreateBoardInput!): Board!
+  updateBoard(updateBoardInput: UpdateBoardInput!): Board!
+  removeBoard(id: ID!): Board!
   createList(createListInput: CreateListInput!): List!
   updateList(updateListInput: UpdateListInput!): List!
   removeList(id: ID!): List!
@@ -164,38 +146,23 @@ input UpdateUserInput {
   deletedAt: DateTime
 }
 
-input CreateClientInput {
-  name: String!
-  email: String!
-  nit: String
-}
-
-input UpdateClientInput {
-  name: String
-  email: String
-  nit: String
-  id: ID!
-}
-
-input CreateProjectInput {
+input CreateBoardInput {
   title: String!
-  clientId: ID
 }
 
-input UpdateProjectInput {
+input UpdateBoardInput {
   title: String
-  clientId: ID!
   id: ID!
 }
 
 input CreateListInput {
   title: String!
-  projectId: ID!
+  boardId: ID!
 }
 
 input UpdateListInput {
   title: String
-  projectId: ID
+  boardId: ID
   id: ID!
 }
 

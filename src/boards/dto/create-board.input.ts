@@ -1,8 +1,8 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { InputType, Int, Field } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
 
 @InputType()
-export class CreateProjectInput {
+export class CreateBoardInput {
   @Field(() => String)
   @MaxLength(1000)
   @MinLength(2)

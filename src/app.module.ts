@@ -8,10 +8,10 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { join } from 'path';
 
 import { AuthModule } from './auth/auth.module';
+import { BoardsModule } from './boards/boards.module';
 import { ENV_CONFIG } from './config/app.config';
 import { JoiValidationSchema } from './config/joi.config';
 import { ListsModule } from './lists/lists.module';
-import { ProjectsModule } from './projects/projects.module';
 import { RequestsModule } from './requests/requests.module';
 import { SeedModule } from './seed/seed.module';
 import { SubRequestsModule } from './sub-requests/sub-requests.module';
@@ -77,8 +77,6 @@ import { UsersModule } from './users/users.module';
 
     SeedModule,
 
-    ProjectsModule,
-
     ListsModule,
 
     RequestsModule,
@@ -86,6 +84,8 @@ import { UsersModule } from './users/users.module';
     SubRequestsModule,
 
     TasksModule,
+
+    BoardsModule,
   ],
 })
 export class AppModule {}
