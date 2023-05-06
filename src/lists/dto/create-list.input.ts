@@ -10,5 +10,5 @@ export class CreateListInput {
 
   @Field(() => ID)
   @IsUUID()
-  projectId: string;
+  boardId: string;
 }
