@@ -14,6 +14,7 @@ import { JoiValidationSchema } from './config/joi.config';
 import { ListsModule } from './lists/lists.module';
 import { SeedModule } from './seed/seed.module';
 import { UsersModule } from './users/users.module';
+import { CardsModule } from './cards/cards.module';
 
 @Module({
   imports: [
@@ -77,6 +78,8 @@ import { UsersModule } from './users/users.module';
     BoardsModule,
 
     ListsModule,
+
+    CardsModule,
   ],
 })
 export class AppModule {}

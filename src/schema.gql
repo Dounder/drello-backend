@@ -2,38 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: ID!
-  createdAt: DateTime!
-  updateAt: DateTime!
-  deletedAt: DateTime
-  username: String!
-  email: String!
-  roles: [UserRoles!]!
-  lastUpdatedBy: User
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-"""Valid roles for users"""
-enum UserRoles {
-  admin
-  user
-}
-
-type List {
-  id: ID!
-  createdAt: DateTime!
-  updateAt: DateTime!
-  deletedAt: DateTime
-  title: String!
-  board: Board!
-  createdBy: User!
-}
-
 type Board {
   id: ID!
   createdAt: DateTime!
@@ -44,6 +12,54 @@ type Board {
   lists: [List!]!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type List {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  title: String!
+  board: Board!
+  createdBy: User!
+  cards: [Card!]!
+}
+
+type Card {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  title: String!
+  description: String
+  dueDate: DateTime
+  endDate: DateTime
+  list: List!
+  createdBy: User!
+  members: [User!]
+}
+
+type User {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  username: String!
+  email: String!
+  roles: [UserRoles!]!
+  lastUpdatedBy: User
+  cards: [Card!]
+}
+
+"""Valid roles for users"""
+enum UserRoles {
+  admin
+  user
+}
+
 type Query {
   users(roles: [UserRoles!] = [], offset: Int = 0, limit: Int = 10, search: String): [User!]!
   user(id: ID!): User!
@@ -51,6 +67,8 @@ type Query {
   board(id: ID!): Board!
   lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
   list(id: ID!): List!
+  cards(offset: Int = 0, limit: Int = 10, search: String): [Card!]!
+  card(id: ID!): Card!
 }
 
 type Mutation {
@@ -63,6 +81,9 @@ type Mutation {
   createList(createListInput: CreateListInput!): List!
   updateList(updateListInput: UpdateListInput!): List!
   removeList(id: ID!): List!
+  createCard(createCardInput: CreateCardInput!): Card!
+  updateCard(updateCardInput: UpdateCardInput!): Card!
+  removeCard(id: ID!): Card!
 }
 
 input CreateUserInput {
@@ -110,5 +131,23 @@ input CreateListInput {
 input UpdateListInput {
   title: String
   boardId: ID
+  id: ID!
+}
+
+input CreateCardInput {
+  listId: ID!
+  title: String!
+  description: String
+  dueDate: DateTime
+  endDate: DateTime
+  members: [String!]
+}
+
+input UpdateCardInput {
+  listId: ID
+  title: String
+  description: String
+  dueDate: DateTime
+  endDate: DateTime
   id: ID!
 }
