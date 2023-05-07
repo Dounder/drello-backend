@@ -1,8 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { CustomBaseEntity } from '../../common/entities/custom-base.entity';
 import { UserRoles } from './../../common/types/user-roles';
+import { CardMember } from 'src/card-members/entities/card-member.entity';
 
 @ObjectType()
 @Entity('users')
@@ -42,4 +43,7 @@ export class User extends CustomBaseEntity {
   @JoinColumn({ name: 'lastUpdatedBy' })
   @Field(() => User, { nullable: true })
   lastUpdatedBy?: User;
+
+  @OneToMany(() => CardMember, (cardMember) => cardMember.user, { lazy: true })
+  cardMembers: CardMember[];
 }

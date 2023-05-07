@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { isUUID } from 'class-validator';
 import { ArrayOverlap, In, IsNull, Not, Repository } from 'typeorm';
-import { ErrorCodes } from './../common/helpers/errors-codes.helper';
 
+import { ErrorCodes } from './../common/helpers/errors-codes.helper';
 import { PaginationArgs, SearchArgs } from './../common/dto';
 import { HandleExceptions } from './../common/helpers/handle-exceptions.helper';
 import { UserRoles } from './../common/types/user-roles';

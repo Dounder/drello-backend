@@ -5,10 +5,11 @@ import { ListsModule } from 'src/lists/lists.module';
 import { CardsResolver } from './cards.resolver';
 import { CardsService } from './cards.service';
 import { Card } from './entities/card.entity';
+import { CardMembersModule } from 'src/card-members/card-members.module';
 
 @Module({
   providers: [CardsResolver, CardsService],
-  imports: [TypeOrmModule.forFeature([Card]), ListsModule],
+  imports: [TypeOrmModule.forFeature([Card]), ListsModule, CardMembersModule],
   exports: [TypeOrmModule, CardsService],
 })
 export class CardsModule {}

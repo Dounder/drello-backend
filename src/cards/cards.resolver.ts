@@ -1,7 +1,8 @@
 import { ParseUUIDPipe } from '@nestjs/common';
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { Auth, GetUser } from 'src/auth/decorators';
+import { CardMembersService } from 'src/card-members/card-members.service';
 import { PaginationArgs, SearchArgs } from 'src/common/dto';
 import { UserRoles } from 'src/common/types/user-roles';
 import { User } from 'src/users/entities/user.entity';
@@ -9,11 +10,16 @@ import { CardsService } from './cards.service';
 import { CreateCardInput } from './dto/create-card.input';
 import { UpdateCardInput } from './dto/update-card.input';
 import { Card } from './entities/card.entity';
+import { CannotExecuteNotConnectedError } from 'typeorm';
 
 @Resolver(() => Card)
 @Auth()
 export class CardsResolver {
-  constructor(private readonly cardsService: CardsService) {}
+  constructor(
+    private readonly cardsService: CardsService,
+
+    private readonly cardMembersService: CardMembersService,
+  ) {}
 
   @Mutation(() => Card)
   createCard(@Args('createCardInput') createCardInput: CreateCardInput, @GetUser() user: User) {
@@ -41,9 +47,8 @@ export class CardsResolver {
     return this.cardsService.remove(id);
   }
 
-  // TODO: Add query to get all cards of a list
-  // TODO: Add mutation to add members to a card
-  // TODO: Add mutation to remove members from a card
-  // TODO: Add mutation to move a card to another list
-  // TODO: Add custom resolver to get all members of a card
+  @ResolveField(() => [User], { name: 'members' })
+  getMembers(@Parent() card: Card, @Args() paginationArgs: PaginationArgs) {
+    return this.cardMembersService.findCardMembers(card.id, paginationArgs);
+  }
 }

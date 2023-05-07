@@ -15,6 +15,7 @@ import { ListsModule } from './lists/lists.module';
 import { SeedModule } from './seed/seed.module';
 import { UsersModule } from './users/users.module';
 import { CardsModule } from './cards/cards.module';
+import { CardMembersModule } from './card-members/card-members.module';
 
 @Module({
   imports: [
@@ -80,6 +81,8 @@ import { CardsModule } from './cards/cards.module';
     ListsModule,
 
     CardsModule,
+
+    CardMembersModule,
   ],
 })
 export class AppModule {}
