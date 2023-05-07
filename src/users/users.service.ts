@@ -2,9 +2,9 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { isUUID } from 'class-validator';
-import { ArrayOverlap, IsNull, Not, Repository } from 'typeorm';
-import { ErrorCodes } from './../common/helpers/errors-codes.helper';
+import { ArrayOverlap, In, IsNull, Not, Repository } from 'typeorm';
 
+import { ErrorCodes } from './../common/helpers/errors-codes.helper';
 import { PaginationArgs, SearchArgs } from './../common/dto';
 import { HandleExceptions } from './../common/helpers/handle-exceptions.helper';
 import { UserRoles } from './../common/types/user-roles';
@@ -43,6 +43,12 @@ export class UsersService {
     if (roles.length === 0) return query.getMany();
 
     return query.andWhere({ roles: ArrayOverlap(roles) }).getMany();
+  }
+
+  async findByIds(ids: string[]): Promise<User[]> {
+    if (ids.length === 0) return [];
+
+    return await this.userRepository.findBy({ id: In(ids) });
   }
 
   async findOneByTerm(term: string): Promise<User> {

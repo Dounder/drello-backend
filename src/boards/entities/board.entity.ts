@@ -4,11 +4,11 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { List } from 'src/lists/entities/list.entity';
 import { User } from 'src/users/entities/user.entity';
-import { BaseEntity } from './../../common/entities/base.entity';
+import { CustomBaseEntity } from '../../common/entities/custom-base.entity';
 
 @ObjectType()
 @Entity('boards')
-export class Board extends BaseEntity {
+export class Board extends CustomBaseEntity {
   @Field(() => String)
   @Column({ type: 'text' })
   @MaxLength(1000)

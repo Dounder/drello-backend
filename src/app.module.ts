@@ -12,11 +12,10 @@ import { BoardsModule } from './boards/boards.module';
 import { ENV_CONFIG } from './config/app.config';
 import { JoiValidationSchema } from './config/joi.config';
 import { ListsModule } from './lists/lists.module';
-import { RequestsModule } from './requests/requests.module';
 import { SeedModule } from './seed/seed.module';
-import { SubRequestsModule } from './sub-requests/sub-requests.module';
-import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
+import { CardsModule } from './cards/cards.module';
+import { CardMembersModule } from './card-members/card-members.module';
 
 @Module({
   imports: [
@@ -77,15 +76,13 @@ import { UsersModule } from './users/users.module';
 
     SeedModule,
 
+    BoardsModule,
+
     ListsModule,
 
-    RequestsModule,
+    CardsModule,
 
-    SubRequestsModule,
-
-    TasksModule,
-
-    BoardsModule,
+    CardMembersModule,
   ],
 })
 export class AppModule {}

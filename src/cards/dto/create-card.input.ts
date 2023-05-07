@@ -2,13 +2,13 @@ import { Field, ID, InputType } from '@nestjs/graphql';
 import { IsUUID, MaxLength, MinLength } from 'class-validator';
 
 @InputType()
-export class CreateSubRequestInput {
-  @Field(() => String)
-  @MaxLength(1000)
-  @MinLength(2)
-  title: string;
-
+export class CreateCardInput {
   @Field(() => ID)
   @IsUUID()
-  requestId: string;
+  listId: string;
+
+  @Field(() => String)
+  @MinLength(2)
+  @MaxLength(500)
+  title: string;
 }

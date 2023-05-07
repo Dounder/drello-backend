@@ -1,6 +1,6 @@
 import { CreateUserInput } from './dto/inputs/create-user.input';
 import { ParseUUIDPipe } from '@nestjs/common';
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { Auth, GetUser } from './../auth/decorators';
 import { PaginationArgs, SearchArgs } from './../common/dto';
@@ -8,11 +8,13 @@ import { UserRoles } from './../common/types/user-roles';
 import { RoleArg, UpdateUserInput } from './dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
+import { Card } from 'src/cards/entities/card.entity';
+import { CardMembersService } from 'src/card-members/card-members.service';
 
 @Resolver(() => User)
 @Auth()
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService, private readonly cardMemberService: CardMembersService) {}
 
   @Mutation(() => User, { name: 'createUser' })
   @Auth(UserRoles.admin)
@@ -51,5 +53,8 @@ export class UsersResolver {
     return await this.usersService.remove(id);
   }
 
-  // TODO: implement custom resolver
+  @ResolveField(() => [Card], { name: 'cards', description: 'List of cards that user is member of' })
+  async cards(@GetUser() user: User, @Args() pagination: PaginationArgs): Promise<Card[]> {
+    return await this.cardMemberService.findUserCards(user.id, pagination);
+  }
 }
