@@ -12,10 +12,7 @@ import { BoardsModule } from './boards/boards.module';
 import { ENV_CONFIG } from './config/app.config';
 import { JoiValidationSchema } from './config/joi.config';
 import { ListsModule } from './lists/lists.module';
-import { RequestsModule } from './requests/requests.module';
 import { SeedModule } from './seed/seed.module';
-import { SubRequestsModule } from './sub-requests/sub-requests.module';
-import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -77,15 +74,9 @@ import { UsersModule } from './users/users.module';
 
     SeedModule,
 
-    ListsModule,
-
-    RequestsModule,
-
-    SubRequestsModule,
-
-    TasksModule,
-
     BoardsModule,
+
+    ListsModule,
   ],
 })
 export class AppModule {}
