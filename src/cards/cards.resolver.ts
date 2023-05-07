@@ -1,5 +1,5 @@
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ParseUUIDPipe } from '@nestjs/common';
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { Auth, GetUser } from 'src/auth/decorators';
 import { PaginationArgs, SearchArgs } from 'src/common/dto';

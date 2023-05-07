@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { PaginationArgs, SearchArgs } from 'src/common/dto';
+import { HandleExceptions } from 'src/common/helpers/handle-exceptions.helper';
+import { ListsService } from 'src/lists/lists.service';
+import { User } from 'src/users/entities/user.entity';
 import { CreateCardInput } from './dto/create-card.input';
 import { UpdateCardInput } from './dto/update-card.input';
 import { Card } from './entities/card.entity';
-import { User } from 'src/users/entities/user.entity';
-import { InjectRepository, handleRetry } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ListsService } from 'src/lists/lists.service';
-import { PaginationArgs, SearchArgs } from 'src/common/dto';
-import { HandleExceptions } from 'src/common/helpers/handle-exceptions.helper';
-import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class CardsService {
@@ -16,16 +16,13 @@ export class CardsService {
     @InjectRepository(Card)
     private readonly cardRepository: Repository<Card>,
     private readonly listService: ListsService,
-    private readonly usersService: UsersService,
   ) {}
 
   async create(createCardInput: CreateCardInput, user: User): Promise<Card> {
     const list = await this.listService.findOne(createCardInput.listId);
-    const members = await this.usersService.findByIds(createCardInput.members || []);
     const card = this.cardRepository.create({
       ...createCardInput,
       list,
-      members: [user, ...(members || [])],
       createdBy: user,
     });
     return await this.cardRepository.save(card);

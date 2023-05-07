@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MaxLength, MinLength } from 'class-validator';
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { CustomBaseEntity } from 'src/common/entities/custom-base.entity';
 import { List } from 'src/lists/entities/list.entity';
@@ -37,9 +37,4 @@ export class Card extends CustomBaseEntity {
   @ManyToOne(() => User, (user) => user.id, { lazy: true })
   @JoinColumn({ name: 'createdBy' })
   createdBy: User;
-
-  @Field(() => [User], { nullable: true })
-  @ManyToMany(() => User, { lazy: true })
-  @JoinTable({ name: 'card_members' })
-  members: User[];
 }
