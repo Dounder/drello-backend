@@ -1,19 +1,25 @@
-import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ParseUUIDPipe } from '@nestjs/common';
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { Auth, GetUser } from 'src/auth/decorators';
-import { PaginationArgs, SearchArgs } from 'src/common/dto';
+import { BoardMembersService } from 'src/board-members/board-members.service';
+import { SearchArgs } from 'src/common/dto';
+import { UserRoles } from 'src/common/types/user-roles';
 import { User } from 'src/users/entities/user.entity';
+import { PaginationArgs } from './../common/dto/pagination.args';
 import { BoardsService } from './boards.service';
 import { CreateBoardInput } from './dto/create-board.input';
 import { UpdateBoardInput } from './dto/update-board.input';
 import { Board } from './entities/board.entity';
-import { UserRoles } from 'src/common/types/user-roles';
 
 @Auth()
 @Resolver(() => Board)
 export class BoardsResolver {
-  constructor(private readonly boardsService: BoardsService) {}
+  constructor(
+    private readonly boardsService: BoardsService,
+
+    private readonly boardMembersService: BoardMembersService,
+  ) {}
 
   @Mutation(() => Board)
   createBoard(@Args('createBoardInput') createBoardInput: CreateBoardInput, @GetUser() user: User) {
@@ -41,5 +47,8 @@ export class BoardsResolver {
     return this.boardsService.remove(id);
   }
 
-  // TODO: implement custom resolver
+  @ResolveField(() => [User], { name: 'members' })
+  members(@Parent() board: Board, @Args() pagination: PaginationArgs) {
+    return this.boardMembersService.findBoardUsers(board.id, pagination);
+  }
 }

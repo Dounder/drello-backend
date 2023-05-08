@@ -16,6 +16,7 @@ import { SeedModule } from './seed/seed.module';
 import { UsersModule } from './users/users.module';
 import { CardsModule } from './cards/cards.module';
 import { CardMembersModule } from './card-members/card-members.module';
+import { BoardMembersModule } from './board-members/board-members.module';
 
 @Module({
   imports: [
@@ -83,6 +84,8 @@ import { CardMembersModule } from './card-members/card-members.module';
     CardsModule,
 
     CardMembersModule,
+
+    BoardMembersModule,
   ],
 })
 export class AppModule {}
