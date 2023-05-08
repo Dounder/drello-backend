@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
+import { BoardMembersService } from 'src/board-members/board-members.service';
 import { PaginationArgs, SearchArgs } from 'src/common/dto';
 import { HandleExceptions } from 'src/common/helpers/handle-exceptions.helper';
 import { User } from 'src/users/entities/user.entity';
@@ -14,16 +15,16 @@ export class BoardsService {
   constructor(
     @InjectRepository(Board)
     private readonly boardRepository: Repository<Board>,
+
+    private readonly boardMembersService: BoardMembersService,
   ) {}
 
   async create(createBoardInput: CreateBoardInput, user: User): Promise<Board> {
     try {
-      const project = this.boardRepository.create({
-        ...createBoardInput,
-        createdBy: user,
-      });
-
-      return await this.boardRepository.save(project);
+      const newBoard = this.boardRepository.create({ ...createBoardInput, createdBy: user });
+      const board = await this.boardRepository.save(newBoard);
+      await this.boardMembersService.create({ boardId: board.id, userId: user.id });
+      return board;
     } catch (error) {
       HandleExceptions(error);
     }

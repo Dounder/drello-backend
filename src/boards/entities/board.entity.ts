@@ -5,6 +5,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { List } from 'src/lists/entities/list.entity';
 import { User } from 'src/users/entities/user.entity';
 import { CustomBaseEntity } from '../../common/entities/custom-base.entity';
+import { BoardMember } from 'src/board-members/entities/board-member.entity';
 
 @ObjectType()
 @Entity('boards')
@@ -25,4 +26,7 @@ export class Board extends CustomBaseEntity {
   @Field(() => [List])
   @OneToMany(() => List, (list) => list.board, { lazy: true })
   lists: List[];
+
+  @OneToMany(() => BoardMember, (boardMember) => boardMember.board, { lazy: true, onDelete: 'CASCADE' })
+  boardMembers: BoardMember[];
 }

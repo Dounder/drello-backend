@@ -10,11 +10,17 @@ import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { Card } from 'src/cards/entities/card.entity';
 import { CardMembersService } from 'src/card-members/card-members.service';
+import { Board } from 'src/boards/entities/board.entity';
+import { BoardMembersService } from 'src/board-members/board-members.service';
 
 @Resolver(() => User)
 @Auth()
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService, private readonly cardMemberService: CardMembersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly cardMemberService: CardMembersService,
+    private readonly boardMemberService: BoardMembersService,
+  ) {}
 
   @Mutation(() => User, { name: 'createUser' })
   @Auth(UserRoles.admin)
@@ -56,5 +62,10 @@ export class UsersResolver {
   @ResolveField(() => [Card], { name: 'cards', description: 'List of cards that user is member of' })
   async cards(@GetUser() user: User, @Args() pagination: PaginationArgs): Promise<Card[]> {
     return await this.cardMemberService.findUserCards(user.id, pagination);
+  }
+
+  @ResolveField(() => [Board], { name: 'boards', description: 'List of boards that user is member of' })
+  async boards(@GetUser() user: User, @Args() pagination: PaginationArgs): Promise<Board[]> {
+    return await this.boardMemberService.findUserBoards(user.id, pagination);
   }
 }

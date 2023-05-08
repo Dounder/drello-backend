@@ -4,6 +4,7 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from 'typeorm
 import { CustomBaseEntity } from '../../common/entities/custom-base.entity';
 import { UserRoles } from './../../common/types/user-roles';
 import { CardMember } from 'src/card-members/entities/card-member.entity';
+import { BoardMember } from 'src/board-members/entities/board-member.entity';
 
 @ObjectType()
 @Entity('users')
@@ -44,6 +45,9 @@ export class User extends CustomBaseEntity {
   @Field(() => User, { nullable: true })
   lastUpdatedBy?: User;
 
-  @OneToMany(() => CardMember, (cardMember) => cardMember.user, { lazy: true })
+  @OneToMany(() => CardMember, (cardMember) => cardMember.user, { lazy: true, onDelete: 'CASCADE' })
   cardMembers: CardMember[];
+
+  @OneToMany(() => BoardMember, (boardMember) => boardMember.user, { lazy: true, onDelete: 'CASCADE' })
+  boardMembers: BoardMember[];
 }
