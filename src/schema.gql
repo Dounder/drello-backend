@@ -21,6 +21,26 @@ type BoardMember {
   deletedAt: DateTime
 }
 
+type ChecklistItem {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  text: String!
+  done: Boolean!
+  createdBy: User!
+}
+
+type Checklist {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  title: String!
+  createdBy: User!
+  items(offset: Int = 0, limit: Int = 10): [ChecklistItem!]!
+}
+
 type User {
   id: ID!
   createdAt: DateTime!
@@ -78,6 +98,7 @@ type Card {
   list: List!
   createdBy: User!
   members(offset: Int = 0, limit: Int = 10): [User!]!
+  checklists(offset: Int = 0, limit: Int = 10): [Checklist!]!
 }
 
 type Query {
@@ -101,6 +122,11 @@ type Query {
   list(id: ID!): List!
   cards(offset: Int = 0, limit: Int = 10, search: String): [Card!]!
   card(id: ID!): Card!
+  checklists(offset: Int = 0, limit: Int = 10): [Checklist!]!
+  checklist(id: ID!): Checklist!
+  checklistItems(offset: Int = 0, limit: Int = 10): [ChecklistItem!]!
+  checklistItemsByChecklistId(checklistId: ID!, offset: Int = 0, limit: Int = 10): [ChecklistItem!]!
+  checklistItem(id: ID!): ChecklistItem!
 }
 
 type Mutation {
@@ -122,6 +148,12 @@ type Mutation {
   createCard(createCardInput: CreateCardInput!): Card!
   updateCard(updateCardInput: UpdateCardInput!): Card!
   removeCard(id: ID!): Card!
+  createChecklist(createChecklistInput: CreateChecklistInput!): Checklist!
+  updateChecklist(updateChecklistInput: UpdateChecklistInput!): Checklist!
+  removeChecklist(id: ID!): Checklist!
+  createChecklistItem(createChecklistItemInput: CreateChecklistItemInput!): ChecklistItem!
+  updateChecklistItem(updateChecklistItemInput: UpdateChecklistItemInput!): ChecklistItem!
+  removeChecklistItem(id: ID!): ChecklistItem!
 }
 
 input CreateUserInput {
@@ -208,5 +240,26 @@ input CreateCardInput {
 input UpdateCardInput {
   listId: ID
   title: String
+  id: ID!
+}
+
+input CreateChecklistInput {
+  cardId: ID!
+  title: String!
+}
+
+input UpdateChecklistInput {
+  title: String
+  id: ID!
+}
+
+input CreateChecklistItemInput {
+  checklistId: ID!
+  text: String!
+}
+
+input UpdateChecklistItemInput {
+  checklistId: ID
+  text: String
   id: ID!
 }

@@ -3,6 +3,8 @@ import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nest
 
 import { Auth, GetUser } from 'src/auth/decorators';
 import { CardMembersService } from 'src/card-members/card-members.service';
+import { ChecklistsService } from 'src/checklists/checklists.service';
+import { Checklist } from 'src/checklists/entities/checklist.entity';
 import { PaginationArgs, SearchArgs } from 'src/common/dto';
 import { UserRoles } from 'src/common/types/user-roles';
 import { User } from 'src/users/entities/user.entity';
@@ -10,7 +12,6 @@ import { CardsService } from './cards.service';
 import { CreateCardInput } from './dto/create-card.input';
 import { UpdateCardInput } from './dto/update-card.input';
 import { Card } from './entities/card.entity';
-import { CannotExecuteNotConnectedError } from 'typeorm';
 
 @Resolver(() => Card)
 @Auth()
@@ -19,6 +20,7 @@ export class CardsResolver {
     private readonly cardsService: CardsService,
 
     private readonly cardMembersService: CardMembersService,
+    private readonly checklistsService: ChecklistsService,
   ) {}
 
   @Mutation(() => Card)
@@ -50,5 +52,10 @@ export class CardsResolver {
   @ResolveField(() => [User], { name: 'members' })
   getMembers(@Parent() card: Card, @Args() paginationArgs: PaginationArgs) {
     return this.cardMembersService.findCardMembers(card.id, paginationArgs);
+  }
+
+  @ResolveField(() => [Checklist], { name: 'checklists' })
+  getChecklists(@Parent() card: Card, @Args() paginationArgs: PaginationArgs) {
+    return this.checklistsService.findAllByCardId(card.id, paginationArgs);
   }
 }

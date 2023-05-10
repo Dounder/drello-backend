@@ -1,8 +1,10 @@
 import { ParseUUIDPipe } from '@nestjs/common';
-import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
+import { Auth } from 'src/auth/decorators';
 import { Card } from 'src/cards/entities/card.entity';
 import { PaginationArgs } from 'src/common/dto';
+import { UserRoles } from 'src/common/types/user-roles';
 import { User } from 'src/users/entities/user.entity';
 import { CardMembersService } from './card-members.service';
 import { CreateCardMemberInput } from './dto/create-card-member.input';
@@ -10,6 +12,7 @@ import { UpdateCardMemberInput } from './dto/update-card-member.input';
 import { CardMember } from './entities/card-member.entity';
 
 @Resolver(() => CardMember)
+@Auth()
 export class CardMembersResolver {
   constructor(private readonly cardMembersService: CardMembersService) {}
 
@@ -40,6 +43,7 @@ export class CardMembersResolver {
   }
 
   @Mutation(() => CardMember)
+  @Auth(UserRoles.admin)
   removeCardMember(@Args('id', { type: () => ID }, ParseUUIDPipe) id: string) {
     return this.cardMembersService.remove(id);
   }
