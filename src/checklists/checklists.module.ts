@@ -3,6 +3,7 @@ import { ChecklistsService } from './checklists.service';
 import { ChecklistsResolver } from './checklists.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Checklist } from './entities/checklist.entity';
+import { CardsModule } from 'src/cards/cards.module';
 
 @Module({
   providers: [ChecklistsResolver, ChecklistsService],

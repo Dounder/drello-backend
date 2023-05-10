@@ -1,25 +1,30 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+
+import { Auth, GetUser } from 'src/auth/decorators';
+import { PaginationArgs } from 'src/common/dto';
+import { User } from 'src/users/entities/user.entity';
 import { ChecklistsService } from './checklists.service';
-import { Checklist } from './entities/checklist.entity';
 import { CreateChecklistInput } from './dto/create-checklist.input';
 import { UpdateChecklistInput } from './dto/update-checklist.input';
+import { Checklist } from './entities/checklist.entity';
 
 @Resolver(() => Checklist)
+@Auth()
 export class ChecklistsResolver {
   constructor(private readonly checklistsService: ChecklistsService) {}
 
   @Mutation(() => Checklist)
-  createChecklist(@Args('createChecklistInput') createChecklistInput: CreateChecklistInput) {
-    return this.checklistsService.create(createChecklistInput);
+  createChecklist(@Args('createChecklistInput') createChecklistInput: CreateChecklistInput, @GetUser() user: User) {
+    return this.checklistsService.create(createChecklistInput, user);
   }
 
   @Query(() => [Checklist], { name: 'checklists' })
-  findAll() {
-    return this.checklistsService.findAll();
+  findAll(@Args() paginationArgs: PaginationArgs) {
+    return this.checklistsService.findAll(paginationArgs);
   }
 
   @Query(() => Checklist, { name: 'checklist' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => ID }) id: string) {
     return this.checklistsService.findOne(id);
   }
 
@@ -29,7 +34,7 @@ export class ChecklistsResolver {
   }
 
   @Mutation(() => Checklist)
-  removeChecklist(@Args('id', { type: () => Int }) id: number) {
+  removeChecklist(@Args('id', { type: () => ID }) id: string) {
     return this.checklistsService.remove(id);
   }
 }
