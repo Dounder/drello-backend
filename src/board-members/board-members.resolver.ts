@@ -5,6 +5,7 @@ import { BoardMembersService } from './board-members.service';
 import { CreateBoardMemberInput } from './dto/create-board-member.input';
 import { UpdateBoardMemberInput } from './dto/update-board-member.input';
 import { BoardMember } from './entities/board-member.entity';
+import { UserRoles } from 'src/common/types/user-roles';
 
 @Resolver(() => BoardMember)
 @Auth()
@@ -22,6 +23,7 @@ export class BoardMembersResolver {
   }
 
   @Mutation(() => BoardMember)
+  @Auth(UserRoles.admin)
   removeBoardMember(@Args('id', { type: () => ID }) id: string) {
     return this.boardMembersService.remove(id);
   }

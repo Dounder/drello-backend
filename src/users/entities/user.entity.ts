@@ -6,6 +6,7 @@ import { UserRoles } from './../../common/types/user-roles';
 import { CardMember } from 'src/card-members/entities/card-member.entity';
 import { BoardMember } from 'src/board-members/entities/board-member.entity';
 import { Checklist } from 'src/checklists/entities/checklist.entity';
+import { ChecklistItem } from 'src/checklist-items/entities/checklist-item.entity';
 
 @ObjectType()
 @Entity('users')
@@ -54,4 +55,7 @@ export class User extends CustomBaseEntity {
 
   @OneToMany(() => Checklist, (checklist) => checklist.createdBy, { lazy: true, onDelete: 'CASCADE' })
   checklists: Checklist[];
+
+  @OneToMany(() => ChecklistItem, (checklistItem) => checklistItem.createdBy, { lazy: true, onDelete: 'CASCADE' })
+  checklistItems: ChecklistItem[];
 }

@@ -1,5 +1,5 @@
-import { InputType, Int, Field, ID } from '@nestjs/graphql';
-import { IsUUID, MinLength, MaxLength } from 'class-validator';
+import { Field, ID, InputType } from '@nestjs/graphql';
+import { IsUUID, MaxLength, MinLength } from 'class-validator';
 
 @InputType()
 export class CreateChecklistItemInput {

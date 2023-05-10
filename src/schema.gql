@@ -28,6 +28,7 @@ type ChecklistItem {
   deletedAt: DateTime
   text: String!
   done: Boolean!
+  createdBy: User!
 }
 
 type Checklist {
@@ -37,6 +38,7 @@ type Checklist {
   deletedAt: DateTime
   title: String!
   createdBy: User!
+  items(offset: Int = 0, limit: Int = 10): [ChecklistItem!]!
 }
 
 type User {
@@ -122,8 +124,9 @@ type Query {
   card(id: ID!): Card!
   checklists(offset: Int = 0, limit: Int = 10): [Checklist!]!
   checklist(id: ID!): Checklist!
-  checklistItems: [ChecklistItem!]!
-  checklistItem(id: Int!): ChecklistItem!
+  checklistItems(offset: Int = 0, limit: Int = 10): [ChecklistItem!]!
+  checklistItemsByChecklistId(checklistId: ID!, offset: Int = 0, limit: Int = 10): [ChecklistItem!]!
+  checklistItem(id: ID!): ChecklistItem!
 }
 
 type Mutation {
@@ -150,7 +153,7 @@ type Mutation {
   removeChecklist(id: ID!): Checklist!
   createChecklistItem(createChecklistItemInput: CreateChecklistItemInput!): ChecklistItem!
   updateChecklistItem(updateChecklistItemInput: UpdateChecklistItemInput!): ChecklistItem!
-  removeChecklistItem(id: Int!): ChecklistItem!
+  removeChecklistItem(id: ID!): ChecklistItem!
 }
 
 input CreateUserInput {
@@ -258,5 +261,5 @@ input CreateChecklistItemInput {
 input UpdateChecklistItemInput {
   checklistId: ID
   text: String
-  id: Int!
+  id: ID!
 }

@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ChecklistsService } from './checklists.service';
-import { ChecklistsResolver } from './checklists.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { ChecklistItemsModule } from 'src/checklist-items/checklist-items.module';
+import { ChecklistsResolver } from './checklists.resolver';
+import { ChecklistsService } from './checklists.service';
 import { Checklist } from './entities/checklist.entity';
-import { CardsModule } from 'src/cards/cards.module';
 
 @Module({
   providers: [ChecklistsResolver, ChecklistsService],
-  imports: [TypeOrmModule.forFeature([Checklist])],
+  imports: [TypeOrmModule.forFeature([Checklist]), ChecklistItemsModule],
   exports: [TypeOrmModule, ChecklistsService],
 })
 export class ChecklistsModule {}

@@ -4,6 +4,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { Checklist } from 'src/checklists/entities/checklist.entity';
 import { CustomBaseEntity } from 'src/common/entities/custom-base.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 @Entity('checklist_items')
@@ -20,4 +21,8 @@ export class ChecklistItem extends CustomBaseEntity {
 
   @ManyToOne(() => Checklist, (checklist) => checklist.items, { lazy: true })
   checklist: Checklist;
+
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.checklists, { lazy: true })
+  createdBy: User;
 }
