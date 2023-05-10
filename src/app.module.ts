@@ -8,15 +8,17 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { join } from 'path';
 
 import { AuthModule } from './auth/auth.module';
+import { BoardMembersModule } from './board-members/board-members.module';
 import { BoardsModule } from './boards/boards.module';
+import { CardMembersModule } from './card-members/card-members.module';
+import { CardsModule } from './cards/cards.module';
+import { ChecklistsModule } from './checklists/checklists.module';
 import { ENV_CONFIG } from './config/app.config';
 import { JoiValidationSchema } from './config/joi.config';
 import { ListsModule } from './lists/lists.module';
 import { SeedModule } from './seed/seed.module';
 import { UsersModule } from './users/users.module';
-import { CardsModule } from './cards/cards.module';
-import { CardMembersModule } from './card-members/card-members.module';
-import { BoardMembersModule } from './board-members/board-members.module';
+import { ChecklistItemsModule } from './checklist-items/checklist-items.module';
 
 @Module({
   imports: [
@@ -86,6 +88,10 @@ import { BoardMembersModule } from './board-members/board-members.module';
     CardMembersModule,
 
     BoardMembersModule,
+
+    ChecklistsModule,
+
+    ChecklistItemsModule,
   ],
 })
 export class AppModule {}

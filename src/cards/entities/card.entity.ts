@@ -6,6 +6,7 @@ import { CustomBaseEntity } from 'src/common/entities/custom-base.entity';
 import { List } from 'src/lists/entities/list.entity';
 import { User } from 'src/users/entities/user.entity';
 import { CardMember } from 'src/card-members/entities/card-member.entity';
+import { Checklist } from 'src/checklists/entities/checklist.entity';
 
 @ObjectType()
 @Entity('cards')
@@ -41,4 +42,7 @@ export class Card extends CustomBaseEntity {
 
   @OneToMany(() => CardMember, (cardMember) => cardMember.card, { lazy: true })
   cardMembers: CardMember[];
+
+  @OneToMany(() => Checklist, (checklist) => checklist.card, { lazy: true })
+  checklists: Checklist[];
 }

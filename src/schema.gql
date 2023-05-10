@@ -21,6 +21,24 @@ type BoardMember {
   deletedAt: DateTime
 }
 
+type ChecklistItem {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  text: String!
+  done: Boolean!
+}
+
+type Checklist {
+  id: ID!
+  createdAt: DateTime!
+  updateAt: DateTime!
+  deletedAt: DateTime
+  title: String!
+  createdBy: User!
+}
+
 type User {
   id: ID!
   createdAt: DateTime!
@@ -101,6 +119,10 @@ type Query {
   list(id: ID!): List!
   cards(offset: Int = 0, limit: Int = 10, search: String): [Card!]!
   card(id: ID!): Card!
+  checklists: [Checklist!]!
+  checklist(id: Int!): Checklist!
+  checklistItems: [ChecklistItem!]!
+  checklistItem(id: Int!): ChecklistItem!
 }
 
 type Mutation {
@@ -122,6 +144,12 @@ type Mutation {
   createCard(createCardInput: CreateCardInput!): Card!
   updateCard(updateCardInput: UpdateCardInput!): Card!
   removeCard(id: ID!): Card!
+  createChecklist(createChecklistInput: CreateChecklistInput!): Checklist!
+  updateChecklist(updateChecklistInput: UpdateChecklistInput!): Checklist!
+  removeChecklist(id: Int!): Checklist!
+  createChecklistItem(createChecklistItemInput: CreateChecklistItemInput!): ChecklistItem!
+  updateChecklistItem(updateChecklistItemInput: UpdateChecklistItemInput!): ChecklistItem!
+  removeChecklistItem(id: Int!): ChecklistItem!
 }
 
 input CreateUserInput {
@@ -209,4 +237,26 @@ input UpdateCardInput {
   listId: ID
   title: String
   id: ID!
+}
+
+input CreateChecklistInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateChecklistInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateChecklistItemInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateChecklistItemInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
